@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.python-version
+
+# WireViz auxiliary outputs (we commit the .svg and .bom.tsv only)
+cyberdeck-wiring.html
+cyberdeck-wiring.png
+cyberdeck-wiring.gv
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Local-only working notes
+*.local.md
+*.private.md

@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#
+# Pre-commit hook: regenerate cyberdeck-wiring.svg whenever the YAML source
+# is staged for commit. Soft-fails (warns only) if WireViz or Graphviz are
+# not installed, so commits from machines without the toolchain still work
+# — but the committed SVG may then be out of date.
+#
+# Activate this hook once per clone:
+#   git config core.hooksPath .githooks
+#
+
+set -euo pipefail
+
+YAML="cyberdeck-wiring.yml"
+SVG="cyberdeck-wiring.svg"
+BOM="cyberdeck-wiring.bom.tsv"
+
+# Only run if the YAML is staged
+if ! git diff --cached --name-only | grep -qx "$YAML"; then
+    exit 0
+fi
+
+echo "[pre-commit] $YAML changed, regenerating $SVG..."
+
+if ! command -v wireviz >/dev/null 2>&1; then
+    cat >&2 <<EOF
+[pre-commit] WARNING: wireviz not installed; skipping SVG regen.
+[pre-commit]          Install with: pip install --user wireviz   (or pipx)
+[pre-commit]          The committed SVG may be out of date relative to the YAML.
+EOF
+    exit 0
+fi
+
+if ! command -v dot >/dev/null 2>&1; then
+    cat >&2 <<EOF
+[pre-commit] WARNING: graphviz not installed; skipping SVG regen.
+[pre-commit]          Install with: sudo apt install graphviz
+[pre-commit]          The committed SVG may be out of date relative to the YAML.
+EOF
+    exit 0
+fi
+
+./build-wiring-diagram.sh > /dev/null
+
+git add "$SVG"
+[[ -f "$BOM" ]] && git add "$BOM"
+
+echo "[pre-commit] Regenerated and staged $SVG (and $BOM if present)."

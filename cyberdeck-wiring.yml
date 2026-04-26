@@ -1,0 +1,261 @@
+metadata:
+  title: Cyberdeck Power Harness
+  description: |
+    LiFePO4 12V battery -> distribution post -> system disconnect ->
+    charge controller / load kill / fuse block -> bucks -> loads.
+    NOCO X-Connect taps upstream of system disconnect for smart-charger bypass.
+  notes:
+    - Negative lead bypasses both switches; only positive is interrupted.
+    - All crimps heat-shrunk. Use a ratcheting crimper for durable joints.
+    - Lengths below are approximate, in meters.
+
+connectors:
+  BAT:
+    type: LiFePO4 12V 5Ah
+    subtype: F1 male spade tabs
+    pinlabels: ["+", "-"]
+
+  POST:
+    type: Blue Sea 2104 PowerPost
+    subtype: M8 stud, stacked ring lugs
+    pincount: 1
+
+  MAINFUSE:
+    type: Inline ATC Fuse Holder
+    subtype: 20-30A fuse
+    pinlabels: [IN, OUT]
+
+  SYSDISC:
+    type: System Disconnect
+    subtype: SPST 20-30A toggle
+    pinlabels: [IN, OUT]
+
+  CC:
+    type: Renogy Wanderer 10A
+    subtype: PWM, LI mode
+    pinlabels: [BATp, BATn]
+
+  KILL:
+    type: Load Kill Switch
+    subtype: SPST 20-30A toggle
+    pinlabels: [IN, OUT]
+
+  FBPOS:
+    type: WUPP Fuse Block (+) Bus
+    subtype: 6-way ATC, LED faults
+    pinlabels: [IN, F1, F2, F3]
+
+  FBNEG:
+    type: WUPP Fuse Block (-) Bus
+    subtype: integrated negative
+    pinlabels: [IN, N1, N2, N3, N4]
+
+  BUCKPI:
+    type: DROK 12V to 5V/5A
+    subtype: Pi server feed
+    pinlabels: [INp, INn, OUTp, OUTn]
+
+  BUCKUC:
+    type: 12V to 5V/3A buck
+    subtype: uConsole feed
+    pinlabels: [INp, INn, OUTp, OUTn]
+
+  PI:
+    type: Waveshare Pi Case
+    subtype: 5V Power Screw Terminal
+    pinlabels: ["+", "-"]
+
+  UC:
+    type: uConsole
+    subtype: USB-C 5V input
+    pinlabels: ["+", "-"]
+
+  NOCO:
+    type: NOCO X-Connect plug
+    subtype: ring-terminal pigtail
+    pinlabels: ["+", "-"]
+
+cables:
+  W_BAT_POST:
+    gauge: 14 AWG
+    length: 0.1
+    wirecount: 1
+    colors: [RD]
+    show_equiv: true
+
+  W_POST_FUSE:
+    gauge: 14 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [RD]
+
+  W_FUSE_SYSDISC:
+    gauge: 14 AWG
+    length: 0.1
+    wirecount: 1
+    colors: [RD]
+
+  W_SYSDISC_CC:
+    gauge: 14 AWG
+    length: 0.2
+    wirecount: 1
+    colors: [RD]
+
+  W_SYSDISC_KILL:
+    gauge: 14 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [RD]
+
+  W_KILL_FBPOS:
+    gauge: 14 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [RD]
+
+  W_FBPOS_BUCKPI:
+    gauge: 16 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [RD]
+
+  W_FBPOS_BUCKUC:
+    gauge: 16 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [RD]
+
+  W_BUCKPI_PI:
+    gauge: 18 AWG
+    length: 0.15
+    wirecount: 2
+    colors: [RD, BK]
+
+  W_BUCKUC_UC:
+    gauge: 18 AWG
+    length: 0.5
+    wirecount: 2
+    colors: [RD, BK]
+
+  W_BAT_FBNEG:
+    gauge: 14 AWG
+    length: 0.4
+    wirecount: 1
+    colors: [BK]
+
+  W_CC_FBNEG:
+    gauge: 14 AWG
+    length: 0.3
+    wirecount: 1
+    colors: [BK]
+
+  W_FBNEG_BUCKPI:
+    gauge: 16 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [BK]
+
+  W_FBNEG_BUCKUC:
+    gauge: 16 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [BK]
+
+  W_POST_NOCO:
+    gauge: 14 AWG
+    length: 0.3
+    wirecount: 1
+    colors: [RD]
+    notes: NOCO X-Connect bypass (upstream of system disconnect)
+
+  W_FBNEG_NOCO:
+    gauge: 14 AWG
+    length: 0.3
+    wirecount: 1
+    colors: [BK]
+    notes: NOCO X-Connect bypass (negative)
+
+connections:
+  # Positive (+) main path: Battery -> Post -> Fuse -> SysDisc -> CC / Kill -> FuseBlock -> Bucks
+  -
+    - BAT: [1]
+    - W_BAT_POST: [1]
+    - POST: [1]
+
+  -
+    - POST: [1]
+    - W_POST_FUSE: [1]
+    - MAINFUSE: [1]
+
+  -
+    - MAINFUSE: [2]
+    - W_FUSE_SYSDISC: [1]
+    - SYSDISC: [1]
+
+  -
+    - SYSDISC: [2]
+    - W_SYSDISC_CC: [1]
+    - CC: [1]
+
+  -
+    - SYSDISC: [2]
+    - W_SYSDISC_KILL: [1]
+    - KILL: [1]
+
+  -
+    - KILL: [2]
+    - W_KILL_FBPOS: [1]
+    - FBPOS: [1]
+
+  -
+    - FBPOS: [2]
+    - W_FBPOS_BUCKPI: [1]
+    - BUCKPI: [1]
+
+  -
+    - FBPOS: [3]
+    - W_FBPOS_BUCKUC: [1]
+    - BUCKUC: [1]
+
+  # NOCO bypass: ring lugs stack on PowerPost (positive) and FB negative bus (negative)
+  -
+    - POST: [1]
+    - W_POST_NOCO: [1]
+    - NOCO: [1]
+
+  -
+    - FBNEG: [5]
+    - W_FBNEG_NOCO: [1]
+    - NOCO: [2]
+
+  # Negative (-) path: Battery -> FBNEG; CC negative also lands here
+  -
+    - BAT: [2]
+    - W_BAT_FBNEG: [1]
+    - FBNEG: [1]
+
+  -
+    - CC: [2]
+    - W_CC_FBNEG: [1]
+    - FBNEG: [2]
+
+  -
+    - FBNEG: [3]
+    - W_FBNEG_BUCKPI: [1]
+    - BUCKPI: [2]
+
+  -
+    - FBNEG: [4]
+    - W_FBNEG_BUCKUC: [1]
+    - BUCKUC: [2]
+
+  # Buck outputs to loads
+  -
+    - BUCKPI: [3, 4]
+    - W_BUCKPI_PI: [1, 2]
+    - PI: [1, 2]
+
+  -
+    - BUCKUC: [3, 4]
+    - W_BUCKUC_UC: [1, 2]
+    - UC: [1, 2]
