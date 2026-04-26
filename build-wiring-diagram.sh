@@ -51,6 +51,19 @@ fi
 echo "Regenerating wiring diagram from $SOURCE..."
 wireviz "$SOURCE"
 
+# WireViz defaults to a left-to-right (LR) layout, which renders wide on
+# GitHub and gets aggressively scaled down to fit the page width. Force a
+# top-to-bottom (TB) layout by editing the intermediate .gv file and
+# re-rendering the SVG/PNG with dot.
+GV="cyberdeck-wiring.gv"
+if [[ -f "$GV" ]]; then
+    echo "Re-rendering with vertical (TB) layout..."
+    sed -i.bak -E 's/(rankdir[[:space:]]*=[[:space:]]*)"?LR"?/\1"TB"/' "$GV"
+    rm -f "$GV.bak"
+    dot -Tsvg -o cyberdeck-wiring.svg "$GV"
+    dot -Tpng -o cyberdeck-wiring.png "$GV"
+fi
+
 echo
 echo "Done. Generated files:"
 ls -1 cyberdeck-wiring.{svg,png,html,bom.tsv} 2>/dev/null || true
