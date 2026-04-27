@@ -1,8 +1,8 @@
 metadata:
   title: Cyberdeck Power Harness
   description: |
-    LiFePO4 12V battery -> distribution post -> system disconnect ->
-    charge controller / load kill / fuse block -> bucks -> loads.
+    LiFePO4 12V battery to distribution post to system disconnect to
+    charge controller, load kill, fuse block, bucks, loads.
     NOCO X-Connect taps upstream of system disconnect for smart-charger bypass.
   notes:
     - Negative lead bypasses both switches; only positive is interrupted.
@@ -79,7 +79,7 @@ connectors:
   ROUTER:
     type: GL.iNet GL-AR300M16-Ext
     subtype: Shadow Ext (5V power, RJ45)
-    pinlabels: [PWRp, PWRn, LAN]
+    pinlabels: [PWRp, PWRn, ETH]
 
   NOCO:
     type: NOCO X-Connect plug
@@ -198,7 +198,7 @@ cables:
     length: 0.15
     wirecount: 1
     colors: [GY]
-    notes: Cat5e Ethernet patch (Pi RJ45 -> Router LAN)
+    notes: Cat5e Ethernet patch from Pi RJ45 to Router LAN port
 
 connections:
   # Positive (+) main path: Battery -> Post -> Fuse -> SysDisc -> CC / Kill -> FuseBlock -> Bucks
