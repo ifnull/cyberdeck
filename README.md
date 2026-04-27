@@ -51,7 +51,7 @@ Battery (−) ──► Fuse Block (−) Bus ◄── Charge Controller (BAT−
 
 **Full diagram** (regenerated from [`cyberdeck-wiring.yml`](cyberdeck-wiring.yml) by [WireViz](https://github.com/wireviz/WireViz)):
 
-![Cyberdeck wiring](cyberdeck-wiring.svg)
+![Cyberdeck wiring](cyberdeck-wiring.png)
 
 To regenerate after editing the YAML:
 
