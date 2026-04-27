@@ -8,6 +8,7 @@ metadata:
     - Negative lead bypasses both switches; only positive is interrupted.
     - All crimps heat-shrunk. Use a ratcheting crimper for durable joints.
     - Lengths below are approximate, in meters.
+    - All harness wire is marine-grade tinned copper (Ancor / Pacer or equivalent). Two gauges only - 14 AWG for main current paths, 18 AWG for branch / 5V output runs. CCA wire is not used anywhere in the build.
 
 connectors:
   BAT:
@@ -32,8 +33,8 @@ connectors:
 
   CC:
     type: Renogy Wanderer 10A
-    subtype: PWM, LI mode
-    pinlabels: [BATp, BATn]
+    subtype: PWM, LI mode (+ 5V/2A USB-A)
+    pinlabels: [BATp, BATn, USBp, USBn]
 
   KILL:
     type: Load Kill Switch
@@ -65,10 +66,20 @@ connectors:
     subtype: 5V Power Screw Terminal
     pinlabels: ["+", "-"]
 
+  PIETH:
+    type: Raspberry Pi 4B
+    subtype: RJ45 Ethernet
+    pincount: 1
+
   UC:
     type: uConsole
     subtype: USB-C 5V input
     pinlabels: ["+", "-"]
+
+  ROUTER:
+    type: GL.iNet GL-AR300M16-Ext
+    subtype: Shadow Ext (5V power, RJ45)
+    pinlabels: [PWRp, PWRn, LAN]
 
   NOCO:
     type: NOCO X-Connect plug
@@ -114,13 +125,13 @@ cables:
     colors: [RD]
 
   W_FBPOS_BUCKPI:
-    gauge: 16 AWG
+    gauge: 18 AWG
     length: 0.15
     wirecount: 1
     colors: [RD]
 
   W_FBPOS_BUCKUC:
-    gauge: 16 AWG
+    gauge: 18 AWG
     length: 0.15
     wirecount: 1
     colors: [RD]
@@ -150,13 +161,13 @@ cables:
     colors: [BK]
 
   W_FBNEG_BUCKPI:
-    gauge: 16 AWG
+    gauge: 18 AWG
     length: 0.15
     wirecount: 1
     colors: [BK]
 
   W_FBNEG_BUCKUC:
-    gauge: 16 AWG
+    gauge: 18 AWG
     length: 0.15
     wirecount: 1
     colors: [BK]
@@ -174,6 +185,20 @@ cables:
     wirecount: 1
     colors: [BK]
     notes: NOCO X-Connect bypass (negative)
+
+  W_CC_ROUTER:
+    gauge: 22 AWG
+    length: 0.3
+    wirecount: 2
+    colors: [RD, BK]
+    notes: USB-A to micro-USB, powers router from controller's built-in 5V/2A USB output
+
+  W_PI_ROUTER:
+    gauge: 24 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [GY]
+    notes: Cat5e Ethernet patch (Pi RJ45 -> Router LAN)
 
 connections:
   # Positive (+) main path: Battery -> Post -> Fuse -> SysDisc -> CC / Kill -> FuseBlock -> Bucks
@@ -259,3 +284,15 @@ connections:
     - BUCKUC: [3, 4]
     - W_BUCKUC_UC: [1, 2]
     - UC: [1, 2]
+
+  # Router: power from charge controller's built-in USB-A 5V output
+  -
+    - CC: [3, 4]
+    - W_CC_ROUTER: [1, 2]
+    - ROUTER: [1, 2]
+
+  # Router: Ethernet patch from Pi to Router LAN port
+  -
+    - PIETH: [1]
+    - W_PI_ROUTER: [1]
+    - ROUTER: [3]

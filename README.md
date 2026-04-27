@@ -30,9 +30,10 @@ Portable, self-contained Pi-based field kit in a hardshell case. LiFePO4 power w
 | GL.iNet Shadow Ext + RP-SMA bulkheads + Ethernet patch | $50-60 |
 | Power system | $95-160 |
 | Monitoring (e-ink + LCD on hand; BT-1 module new) | $18-30 |
+| 14 AWG marine wire (red + black, ~25 ft each) | $25-40 |
 | Connectors, cables, foam, misc | $30-50 |
 | SDR (already owned) | $0 |
-| **Total** | **$403-665** |
+| **Total** | **$428-705** |
 
 Detailed component list with brand recommendations is in [`build-rationale.md`](build-rationale.md).
 

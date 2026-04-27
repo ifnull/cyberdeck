@@ -206,7 +206,7 @@ The case runs open when antennas are deployed. When traveling or storing, unscre
 | Part | Notes | Price |
 |------|-------|-------|
 | LiFePO4 12V 5Ah / 64Wh battery (on hand) | Safe chemistry (no thermal runaway), 2000+ cycle life, flat discharge curve. Using a spare 5Ah pack already on the shelf instead of buying a 6Ah. SLA-style form factor with F1 (or F2 — verify) male spade tabs on top. | $0 (spare) |
-| Battery termination kit | Female fully-insulated quick-disconnect terminals matching the battery's tab size (F1 = 0.187" / 4.75mm, F2 = 0.250" / 6.35mm) — measure the actual tab before ordering, or buy an assortment pack with both sizes. 14 AWG silicone or stranded wire pigtails (~6") from each terminal to ring lugs (#10 stud) that bolt onto the system disconnect. Keep heat-shrink over each crimp. A proper ratcheting crimper (Klein, IWISS, or Engineer brand, ~$25) makes durable joints; plier-style crimpers fail under vibration. | $10-30 (terminals + lugs + crimper if not on hand) |
+| Battery termination kit | Female fully-insulated quick-disconnect terminals matching the battery's tab size (F1 = 0.187" / 4.75mm, F2 = 0.250" / 6.35mm) — measure the actual tab before ordering, or buy an assortment pack with both sizes. 14 AWG marine-grade tinned-copper wire pigtails (~6") from each terminal to ring lugs (#10 stud) that bolt onto the system disconnect. Keep heat-shrink over each crimp. A proper ratcheting crimper (Klein, IWISS, or Engineer brand, ~$25) makes durable joints; plier-style crimpers fail under vibration. | $10-30 (terminals + lugs + crimper if not on hand) |
 | NOCO X-Connect ring-terminal pigtail (permanent install for smart charging) | The NOCO Genius ships with both alligator clamps and X-Connect ring-terminal leads. The ring-terminal lead is a short cable ending in two ring lugs (positive and negative) on one end and the NOCO X-Connect plug on the other. Stack the ring lugs onto the battery distribution post (positive lead) and fuse block (−) bus (negative lead), so the NOCO X-Connect plug dangles inside the case ready to receive the NOCO's main cable. Bypasses both the system disconnect and the load kill switch — direct battery access — so the NOCO can charge the pack regardless of switch state. | $0 (ships with NOCO Genius) |
 | Blue Sea 2104 PowerPost Plus (battery distribution post, positive side) | Single threaded stud (5/16" / M8) with insulated base and clear protective cap. Acts as the central stacking point for the positive lead before the system disconnect — battery (+) wire, wire to system disconnect input, NOCO X-Connect (+) lead, and one spare for future expansion all stack here. Rated 600A (massively above our ~10A use), but the value is the form factor and the cap that prevents accidental shorts during install. Generic Amazon equivalents work fine at ~$5-8 if budget matters more than brand. | $10-15 |
 | Renogy Wanderer 10A charge controller | PWM, 12V, negative ground. Selectable battery profiles include LI (LiFePO4: 14.4V boost / 13.6V float / 10.8V LVD) — must be set via LCD menu after install (default is SLD lead-acid). 10A is plenty for the 50W panel and a future 100W upgrade; 100W+ panels are earmarked for the separate solar generator project anyway. RS232 / RJ12 port accepts Renogy BT-1 Bluetooth module for telemetry (officially compatible per Renogy's product page). Built-in 5V/2A dual USB output on the front (see Power System). Lives inside the case. | $20 |
@@ -442,9 +442,23 @@ Line 1: Kiwix server status + AP client count. Line 2: mesh peer count + bus vol
 
 **Runtime estimation:** For v1, trust the Renogy's internal SoC reading. `runtime_hours = (SoC% × 64Wh × 0.88) / current_load_W`. If accuracy drifts (LiFePO4's flat voltage curve makes voltage-only SoC unreliable mid-pack), add the INA226 and integrate current over time for a true coulomb count.
 
+**GPIO pinout reference (deliberately not in the WireViz harness):**
+
+The displays and optional INA226 sensor connect to the Pi's 40-pin header for both power and data. They draw from the Pi's internal 5V/3.3V rails (which trace back to the DROK buck via the Waveshare case's 5V terminal), so they don't touch the 12V harness or the fuse block.
+
+| Device | Bus | Pi pins | Notes |
+|--------|-----|---------|-------|
+| LCD1602 with PCF8574 backpack | I²C | 2 (5V), 6 (GND), 3 (SDA), 5 (SCL) | 4 jumper wires; default I²C address 0x27 (or 0x3F on some clones) |
+| Waveshare e-ink (HAT variant) | SPI + control GPIO | Stacks on full 40-pin header | No wiring required if you use the HAT version; for a discrete e-ink module use SPI MOSI/SCLK/CE0 + DC/RST/BUSY GPIOs per Waveshare's wiring guide |
+| INA226 (optional v2) | I²C | 1 (3.3V), 9 (GND), 3 (SDA), 5 (SCL) | Shares the I²C bus with LCD1602; default address 0x40. The high-current shunt resistor sits inline on the 12V positive bus, separately. |
+
+The Waveshare Pi case's "Pi5 Connector Adapter" PCB intermediates the GPIO header; verify which pins are passed through vs. consumed by the case's own functions (active fan power, NVMe adapter signaling) before final assembly. If the case occupies pins the displays need, route via female-to-female jumpers from the case's exposed GPIO breakout rather than stacking a HAT.
+
 ### Internal Wiring & Layout
 | Part | Notes | Price |
 |------|-------|-------|
+| 14 AWG marine-grade tinned copper wire (red + black, ~25 ft each) | Main current paths: battery feeds, switches, fuse block, NOCO X-Connect bypass leads. Tinned copper resists strand corrosion in long-term storage; marine-grade construction handles vibration during transport. Brands: Ancor, Pacer, Cobra Wire & Cable. **Do not substitute CCA (copper-clad aluminum)** — higher resistance, fragile under flex, galvanic corrosion at copper-terminal interfaces. | $25-40 |
+| 18 AWG marine-grade tinned copper wire (red + black, on hand) | Branch wires: buck inputs (1-3A) and 5V outputs to Pi/uConsole (2-5A short runs). Same marine-grade requirement as the 14 AWG. | $0 (on hand) |
 | Kaizen foam (2 layers) | Custom-cut inserts. Way better than pick-n-pluck for a clean layout. | $15-20 |
 | Velcro strips + zip ties | For securing components that need to be removable | $5 |
 | USB-A/C ports on mounting plate or short extension cables | For charging phones, connecting peripherals with case open | $5-8 |
@@ -574,9 +588,10 @@ The case is designed around open-lid operation. Active ventilation is not needed
 | GL.iNet Shadow Ext router + RP-SMA bulkheads + Ethernet patch | $50-60 |
 | Power system (Renogy Wanderer 10A $20, bucks, WUPP 6-way fuse block on hand, 50W spare panel, Powerpole, system disconnect + load kill switches, Blue Sea 2104 PowerPost, wall brick, external-source cables, battery termination kit; battery on hand) | $95-160 |
 | Monitoring (BT-1 module; e-ink + LCD1602 on hand; INA226 optional) | $18-30 |
-| Connectors, cables, foam, misc | $30-50 |
+| 14 AWG marine wire (red + black, ~25 ft each) | $25-40 |
+| Connectors, cables, foam, misc (18 AWG marine wire on hand; CCA not used) | $30-50 |
 | SDR (already owned) | $0 |
-| **Cyberdeck Total** | **$403-665** |
+| **Cyberdeck Total** | **$428-705** |
 | **Future: AIO V2 upgrade** | **+$92-145** |
 
 The companion rooftop station is documented separately (`rooftop-station.md`) and totals approximately $175-265 if built alongside this kit.

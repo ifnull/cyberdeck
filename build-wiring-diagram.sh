@@ -49,19 +49,56 @@ if ! command -v dot >/dev/null 2>&1; then
 fi
 
 echo "Regenerating wiring diagram from $SOURCE..."
-wireviz "$SOURCE"
+# -f hpstg = html, png, svg, tsv, AND graphviz (.gv).
+# By default WireViz omits the .gv; we need it to post-process the layout.
+wireviz -f hpstg "$SOURCE"
 
 # WireViz defaults to a left-to-right (LR) layout, which renders wide on
 # GitHub and gets aggressively scaled down to fit the page width. Force a
-# top-to-bottom (TB) layout by editing the intermediate .gv file and
-# re-rendering the SVG/PNG with dot.
+# top-to-bottom (TB) layout by rewriting the intermediate .gv file and
+# re-rendering with dot. Use Python for robust regex (sed was unreliable
+# across WireViz output variations).
 GV="cyberdeck-wiring.gv"
 if [[ -f "$GV" ]]; then
-    echo "Re-rendering with vertical (TB) layout..."
-    sed -i.bak -E 's/(rankdir[[:space:]]*=[[:space:]]*)"?LR"?/\1"TB"/' "$GV"
-    rm -f "$GV.bak"
-    dot -Tsvg -o cyberdeck-wiring.svg "$GV"
-    dot -Tpng -o cyberdeck-wiring.png "$GV"
+    echo
+    python3 - "$GV" <<'PYEOF'
+import re, sys, pathlib
+gv = pathlib.Path(sys.argv[1])
+content = gv.read_text()
+
+# Find any rankdir lines (case-insensitive, optional quotes/spacing)
+pattern = re.compile(r'(rankdir\s*=\s*)(["\']?)(LR|RL|TB|BT)\2', re.IGNORECASE)
+matches = pattern.findall(content)
+print(f"[wireviz-postprocess] rankdir occurrences before: {len(matches)} -> {matches}")
+
+# Replace any LR/RL with TB
+new = pattern.sub(lambda m: f'{m.group(1)}{m.group(2)}TB{m.group(2)}', content)
+
+# If no rankdir found at all, inject TB right after the opening brace.
+if 'rankdir' not in new.lower():
+    print("[wireviz-postprocess] no rankdir found; injecting rankdir=TB")
+    new = re.sub(r'((?:di)?graph[^{]*\{)',
+                 r'\1\n\trankdir=TB;\n\tnodesep=0.25;\n\tranksep=0.4;',
+                 new, count=1)
+elif 'nodesep' not in new.lower():
+    # rankdir already (now TB); add tighter spacing.
+    new = re.sub(r'((?:di)?graph[^{]*\{)',
+                 r'\1\n\tnodesep=0.25;\n\tranksep=0.4;',
+                 new, count=1)
+
+gv.write_text(new)
+
+# Verify
+matches_after = pattern.findall(new)
+print(f"[wireviz-postprocess] rankdir occurrences after:  {len(matches_after)} -> {matches_after}")
+PYEOF
+
+    echo
+    echo "Re-rendering SVG/PNG with edited .gv..."
+    # Belt-and-suspenders: also pass -Grankdir=TB on the command line so dot
+    # uses TB even if the .gv edit somehow didn't take.
+    dot -Grankdir=TB -Gnodesep=0.25 -Granksep=0.4 -Tsvg -o cyberdeck-wiring.svg "$GV"
+    dot -Grankdir=TB -Gnodesep=0.25 -Granksep=0.4 -Tpng -o cyberdeck-wiring.png "$GV"
 fi
 
 echo
