@@ -25,7 +25,7 @@ graph TD
     end
 
     subgraph Case Wall
-        PWR_IN[Panel Mount\nAnderson Powerpole]
+        PWR_IN[Panel Mount\nSAE 2-pin]
     end
 
     subgraph Inside Case
@@ -165,7 +165,7 @@ graph TB
 
 The 1500-class interior (~16.75" × 11.18" × 6.12") fits the uConsole, Pi server, battery, SDR, and peripherals with room to spare. The 1450-class (~14.62" × 10.18" × 6.0") is tight but workable.
 
-**On the waterproof tradeoff:** both cases ship IP67 (submersible) when sealed. The moment you drill for the Anderson Powerpole panel mount and the two RP-SMA antenna bulkheads, that rating drops to ~IP65 (splash-resistant) even with gasketed mounts. Since the operating mode is *case open for SDR work* (the WiFi antennas are external), the IP67 spec only protects the kit during transport/storage. That makes the Pelican's premium hard to justify for this build — the Apache delivers the same practical protection at a fraction of the cost. The case's built-in Gore-Tex pressure equalization valve handles altitude/temperature changes during transport and is all the ventilation the sealed-travel mode needs.
+**On the waterproof tradeoff:** both cases ship IP67 (submersible) when sealed. The moment you drill for the SAE 2-pin panel mount and the two RP-SMA antenna bulkheads, that rating drops to ~IP65 (splash-resistant) even with gasketed mounts. Since the operating mode is *case open for SDR work* (the WiFi antennas are external), the IP67 spec only protects the kit during transport/storage. That makes the Pelican's premium hard to justify for this build — the Apache delivers the same practical protection at a fraction of the cost. The case's built-in Gore-Tex pressure equalization valve handles altitude/temperature changes during transport and is all the ventilation the sealed-travel mode needs.
 
 ### Primary Interface — Clockwork Pi uConsole
 | Part | Notes | Price |
@@ -214,40 +214,40 @@ The case runs open when antennas are deployed. When traveling or storing, unscre
 | 12V buck converter to 5V 5A (Pi server) — **DROK 12V→5V/5A** recommended | Feeds the Waveshare case's rear 5V power screw terminal directly — bypasses USB-C PD negotiation and avoids undervoltage under NVMe + fan load. The DROK module (~$10) is a solid choice: synchronous rectification (~93-95% efficient), reverse-polarity protection, both screw-terminal and USB-A outputs at 5V/5A. Use the **screw-terminal output** to feed the Waveshare case (cleaner than USB-A → adapter). Set output to ~5.1–5.15V (measured no-load) to compensate for wire drop; verify at the Pi under load. Use 18 AWG minimum on the short 5V run from buck to case. | $10-20 |
 | 12V buck converter to 5V 2A (x1) | For peripherals. **Optional — can be dropped** if you use the Wanderer 10A's built-in 5V 2A USB output instead. The controller's USB is fed through its own internal regulator off the 12V battery bus, so it's electrically equivalent to a dedicated buck. Saves $5 and a mounting position. | $0-5 |
 | WUPP 6-way ATC fuse block with integrated negative bus + LED fault indicators (on hand) | 6 fused positive circuits and a built-in negative bus in one unit — eliminates the need for a separate ground bar. Per-circuit red LEDs light when a fuse blows (huge debugging win). Clear cover, ~30A bus rating, 12-24V DC. Only 2-3 circuits will be used; the rest are spares for future expansion (direct-12V SDR, antenna preamp, second Pi, etc.). Suggested fuse sizes: 5A for the Pi-server buck, 5A for the uConsole buck, 3A for the optional peripherals buck. | $15-20 (or $0 if on hand) |
-| 10W folding solar panel | For field charging. Plugs into panel-mount Powerpole on case wall. | $20-30 |
-| Anderson Powerpole connectors | Standardized DC connectors, easy to repair, used by ham radio community. Solar panel and wall charger both terminate in Powerpole. One panel-mount Powerpole on the case wall (one of three holes drilled — the other two are for WiFi antenna bulkheads). | $10 (bag of 10 pairs) |
-| Panel-mount Anderson Powerpole | Weatherproof power input on case wall. Only hole in the case. | $5-8 |
+| 10W folding solar panel | For field charging. Plugs into panel-mount SAE on case wall. | $20-30 |
+| SAE 2-pin connectors and pigtails | Industry-standard 12V DC connector used by NOCO, CTEK, Battery Tender, Optimate, motorcycle/RV trickle chargers, and most consumer solar adapters. Cheap, abundant pre-made cables, MC4-to-SAE adapters readily available for the solar panel. **Polarity is convention, not enforced** — standard is positive on the female pin (covered by the plastic shell), which matches NOCO / Battery Tender / CTEK. Verify any new adapter with a multimeter on first use; mark verified cables with a colored shrink-wrap ring. | $5-10 (small kit of pairs and pigtails) |
+| SAE 2-pin panel mount with weather cap | DC input on the case wall, gasketed for splash resistance. One of three case-wall holes (the other two are RP-SMA antenna bulkheads). | $5-10 |
 | System disconnect + load kill switch (matching pair) | Two identical panel-mount toggle switches rated 20-30A. **System disconnect** sits on the battery's positive lead before the charge controller — flipping it off fully isolates the controller and load bus from the battery, eliminating the controller's ~10mA parasitic draw during long-term storage. (The NOCO X-Connect taps upstream of this switch so smart charging still works regardless.) **Load kill switch** sits downstream of the system disconnect, cutting only the fuse block / loads while leaving the controller energized so solar can passively maintain the battery. Same model for a clean look on the mounting plate; differentiate with engraved labels ("SYSTEM" / "LOAD") plus colored shrink-wrap rings (e.g., red for system, black for load) to prevent muscle-memory mistakes. | $10-20 (pair) |
-| 12V 5A regulated wall brick (Mean Well GST60A12 or equivalent) | Primary wall charging. 5A is enough to run loads and charge the battery simultaneously; the old 2A spec could only run loads. Terminates in Anderson Powerpole via a barrel-to-Powerpole pigtail. | $25-30 |
-| Cig lighter plug → Powerpole cable | Charge from a vehicle, a solar generator (Jackery / EcoFlow / Bluetti 12V output), or a propane/inverter generator's 12V accessory port. | $8-12 |
-| Powerpole ↔ Powerpole cable (~3 ft) | Parallel an external 12V LiFePO4 pack into the case input for extended runtime or emergency top-up. Slow trickle as voltages equalize — fine for topup, not fast charge. | $8-12 |
+| 12V 5A regulated wall brick (Mean Well GST60A12 or equivalent) | Primary wall charging. 5A is enough to run loads and charge the battery simultaneously; the old 2A spec could only run loads. Terminates in SAE 2-pin via a barrel-to-SAE pigtail. | $25-30 |
+| Cig lighter plug → SAE cable | Charge from a vehicle, a solar generator (Jackery / EcoFlow / Bluetti 12V output), or a propane/inverter generator's 12V accessory port. | $8-12 |
+| SAE ↔ SAE cable (~3 ft) | Parallel an external 12V LiFePO4 pack into the case input for extended runtime or emergency top-up. Slow trickle as voltages equalize — fine for topup, not fast charge. | $8-12 |
 
 **Power flow:** See the Power System diagram in the Architecture section above.
 
 **External Power Sources — single-input-handles-everything:**
 
-The Anderson Powerpole panel mount on the case wall is the *only* power input, regardless of source. Anything 12-22V DC plugs in and the Renogy Wanderer handles the rest — it doesn't distinguish between a solar panel, a wall brick, or another battery; it just sees DC above the battery and charges accordingly.
+The SAE 2-pin panel mount on the case wall is the *only* power input, regardless of source. Anything 12-22V DC plugs in and the Renogy Wanderer handles the rest — it doesn't distinguish between a solar panel, a wall brick, or another battery; it just sees DC above the battery and charges accordingly.
 
 | Source | How it connects | Notes |
 |--------|-----------------|-------|
-| 50W folding solar panel | Panel cable → Powerpole | Primary field charging. |
-| Wall plug (home / generator AC) | Mean Well 12V 5A brick → barrel-to-Powerpole pigtail | Run loads + charge simultaneously. Works off any 120V AC outlet, including a propane/inverter generator. |
-| Vehicle 12V / cig lighter | Cig lighter plug → Powerpole cable | Car running: 13-14V. Ignition off: ~12.5V. Either charges fine. |
-| Solar generator (Jackery / EcoFlow / Bluetti) | Unit's 12V output (cig or barrel) → Powerpole | Most portable power stations expose a regulated 12V output spec'd for CPAPs / routers. Clean and steady. |
-| External 12V LiFePO4 pack | Powerpole ↔ Powerpole cable | Parallels the second pack into the input. Slow trickle as voltages equalize — good for extended runtime or emergency top-up, not fast charge. |
-| USB-C PD power bank (100W+) | PD → 12V trigger cable → Powerpole | Caps around 36W (12V/3A). Trickle-charge only. Niche but useful if all you have is a laptop power bank. |
+| 50W folding solar panel | Panel cable → SAE | Primary field charging. |
+| Wall plug (home / generator AC) | Mean Well 12V 5A brick → barrel-to-SAE pigtail | Run loads + charge simultaneously. Works off any 120V AC outlet, including a propane/inverter generator. |
+| Vehicle 12V / cig lighter | Cig lighter plug → SAE cable | Car running: 13-14V. Ignition off: ~12.5V. Either charges fine. |
+| Solar generator (Jackery / EcoFlow / Bluetti) | Unit's 12V output (cig or barrel) → SAE | Most portable power stations expose a regulated 12V output spec'd for CPAPs / routers. Clean and steady. |
+| External 12V LiFePO4 pack | SAE ↔ SAE cable | Parallels the second pack into the input. Slow trickle as voltages equalize — good for extended runtime or emergency top-up, not fast charge. |
+| USB-C PD power bank (100W+) | PD → 12V trigger cable → SAE | Caps around 36W (12V/3A). Trickle-charge only. Niche but useful if all you have is a laptop power bank. |
 
-**Voltage ceiling:** the Wanderer accepts up to ~25V on the solar input on a 12V system. All the sources above are well under that. The 100W panels (Voc ~22-25V) are earmarked for a separate MPPT solar-generator project and should *not* be plugged into this Powerpole input.
+**Voltage ceiling:** the Wanderer accepts up to ~25V on the solar input on a 12V system. All the sources above are well under that. The 100W panels (Voc ~22-25V) are earmarked for a separate MPPT solar-generator project and should *not* be plugged into this SAE input.
 
 **Source routing — which sources go through the controller vs. direct to battery:**
 
 | Source type | Connection point |
 |-------------|-----------------|
-| Solar panel | Powerpole case input → Wanderer solar input |
-| 12V wall brick (Mean Well etc.) | Powerpole case input → Wanderer solar input |
-| Vehicle 12V / cig lighter | Powerpole case input → Wanderer solar input |
-| Solar generator 12V output | Powerpole case input → Wanderer solar input |
-| External 12V LiFePO4 pack (parallel) | Powerpole case input → Wanderer solar input |
+| Solar panel | SAE case input → Wanderer solar input |
+| 12V wall brick (Mean Well etc.) | SAE case input → Wanderer solar input |
+| Vehicle 12V / cig lighter | SAE case input → Wanderer solar input |
+| Solar generator 12V output | SAE case input → Wanderer solar input |
+| External 12V LiFePO4 pack (parallel) | SAE case input → Wanderer solar input |
 | **NOCO Genius or other smart LiFePO4 charger (14.6V CC/CV)** | **Direct to battery terminals — do NOT feed the Wanderer's solar input** |
 
 Rule of thumb: **dumb DC sources** (panels, wall bricks, batteries) go through the charge controller, which handles regulation. **Smart chargers** that run their own multi-stage algorithm (NOCO Genius, dedicated LiFePO4 bench chargers) go direct to the battery terminals — feeding a smart charger into a PWM solar input can trigger its no-battery-detected fault or cause the two algorithms to fight each other.
@@ -509,11 +509,11 @@ Kiwix full-text search is fast on a Pi 4 — results return in under a second. N
 
 See the Case Layout diagram in the Architecture section above.
 
-**Operating mode:** Case open, antennas screwed into devices on the mounting plate, solar panel connected via Anderson Powerpole.
+**Operating mode:** Case open, antennas screwed into devices on the mounting plate, solar panel connected via SAE 2-pin.
 
 **Travel/storage mode:** Antennas unscrewed and stowed in foam cutouts, solar panel disconnected, case closed and sealed.
 
-Three holes in the case wall: one panel-mount Anderson Powerpole (DC input) and two RP-SMA bulkheads (WiFi antennas). All gasket-sealed with included rubber washers or silicone for weather resistance. The SDR antenna remains internal — it screws into the SDR on the mounting plate and is accessed with the case open. The two WiFi antennas mount externally on the case (always present, even when traveling), protecting the case interior and giving the kit its distinctive cyberdeck profile.
+Three holes in the case wall: one panel-mount SAE 2-pin (DC input) and two RP-SMA bulkheads (WiFi antennas). All gasket-sealed with included rubber washers or silicone for weather resistance. The SDR antenna remains internal — it screws into the SDR on the mounting plate and is accessed with the case open. The two WiFi antennas mount externally on the case (always present, even when traveling), protecting the case interior and giving the kit its distinctive cyberdeck profile.
 
 **Operating modes & case state:**
 
@@ -555,7 +555,7 @@ The case is designed around open-lid operation. Active ventilation is not needed
 - [ ] Connect Shadow Ext to Pi via short Ethernet patch (router LAN port → Pi Ethernet)
 - [ ] Power the Shadow Ext from the Wanderer's built-in 5V/2A USB output
 - [ ] Kaizen foam custom cut
-- [ ] Anderson Powerpole panel mount (single hole)
+- [ ] SAE 2-pin panel mount (single hole)
 - [ ] Cable management
 
 ### Phase 3 — SDR Integration
@@ -565,7 +565,7 @@ The case is designed around open-lid operation. Active ventilation is not needed
 
 ### Phase 4 — Field Hardening
 - [ ] Cyberdeck runtime benchmarks under various loads
-- [ ] Wall charger tested through Powerpole input
+- [ ] Wall charger tested through SAE input
 - [ ] Spare parts kit (extra SD cards, fuses, cables, CM4)
 - [ ] Documentation printed and stored in case
 
@@ -586,7 +586,7 @@ The case is designed around open-lid operation. Active ventilation is not needed
 | uConsole (ordered) | $150-200 |
 | Pi 4 + NVMe storage | $70-95 |
 | GL.iNet Shadow Ext router + RP-SMA bulkheads + Ethernet patch | $50-60 |
-| Power system (Renogy Wanderer 10A $20, bucks, WUPP 6-way fuse block on hand, 50W spare panel, Powerpole, system disconnect + load kill switches, Blue Sea 2104 PowerPost, wall brick, external-source cables, battery termination kit; battery on hand) | $95-160 |
+| Power system (Renogy Wanderer 10A $20, bucks, WUPP 6-way fuse block on hand, 50W spare panel, SAE, system disconnect + load kill switches, Blue Sea 2104 PowerPost, wall brick, external-source cables, battery termination kit; battery on hand) | $95-160 |
 | Monitoring (BT-1 module; e-ink + LCD1602 on hand; INA226 optional) | $18-30 |
 | 14 AWG marine wire (red + black, ~25 ft each) | $25-40 |
 | Connectors, cables, foam, misc (18 AWG marine wire on hand; CCA not used) | $30-50 |

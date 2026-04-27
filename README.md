@@ -18,7 +18,7 @@ Portable, self-contained Pi-based field kit in a hardshell case. LiFePO4 power w
 | Comms | NooElec SMArTee XTR SDR + telescoping whip antenna |
 | Power | LiFePO4 12V 5Ah / 64Wh battery · Renogy Wanderer 10A PWM controller (LI mode) · 50W solar panel · DROK 12V→5V/5A buck for Pi · separate buck for uConsole · WUPP 6-way fuse block · Blue Sea 2104 PowerPost · system disconnect + load kill switches |
 | Monitoring | BT-1 Bluetooth telemetry from charge controller · Waveshare e-ink battery dashboard · SunFounder LCD1602 live ops strip |
-| External power | Anderson Powerpole input (panel mount) · NOCO Genius X-Connect ring-terminal pigtail (bypasses both switches) |
+| External power | SAE 2-pin input (panel mount) · NOCO Genius X-Connect ring-terminal pigtail (bypasses both switches) |
 
 ## Bill of materials (summary)
 
@@ -93,7 +93,7 @@ sudo apt install graphviz        # WireViz uses the `dot` binary
 - [ ] Drill 2× ~10mm holes for RP-SMA antenna bulkheads (gasketed)
 - [ ] Run RP-SMA pigtails from router to bulkheads, mount stock antennas externally
 - [ ] Power Shadow Ext from Wanderer's 5V/2A USB output
-- [ ] Anderson Powerpole panel mount installed (single hole)
+- [ ] SAE 2-pin panel mount installed (single hole)
 - [ ] Cable management
 
 ### Phase 3 — SDR
