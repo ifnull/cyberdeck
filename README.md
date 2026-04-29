@@ -16,7 +16,7 @@ Portable, self-contained Pi-based field kit in a hardshell case. LiFePO4 power w
 | Compute | Clockwork uConsole (primary interface) · Raspberry Pi (NVMe) running [nomad-slim](https://github.com/ifnull/nomad-slim) for offline content |
 | Networking | GL.iNet GL-AR300M16-Ext "Shadow Ext" — OpenWrt AP, 2× external RP-SMA antennas through case wall |
 | Comms | NooElec SMArTee XTR SDR + telescoping whip antenna |
-| Power | LiFePO4 12V 5Ah / 64Wh battery · Renogy Wanderer 10A PWM controller (LI mode) · 50W solar panel · DROK 12V→5V/5A buck for Pi · separate buck for uConsole · WUPP 6-way fuse block · Blue Sea 2104 PowerPost · system disconnect + load kill switches |
+| Power | LiFePO4 12V 5Ah / 64Wh battery · Renogy Wanderer 10A PWM controller (LI mode) · 50W solar panel · DROK 12V→5V/5A buck for Pi · separate buck for uConsole · WUPP 6-way fuse block · LENKRAD M6 distribution post · system disconnect + load kill switches |
 | Monitoring | BT-1 Bluetooth telemetry from charge controller · Waveshare e-ink battery dashboard · SunFounder LCD1602 live ops strip |
 | External power | SAE 2-pin input (panel mount) · NOCO Genius X-Connect ring-terminal pigtail (bypasses both switches) |
 
@@ -40,7 +40,7 @@ Detailed component list with brand recommendations is in [`build-rationale.md`](
 ## Wiring
 
 ```
-Battery (+) ──► PowerPost ──► Main Fuse ──► System Disconnect ──┬─► Charge Controller (BAT+)
+Battery (+) ──► M6 distribution post ──► Main Fuse ──► System Disconnect ──┬─► Charge Controller (BAT+)
                     │                                           │
                     │                                           └─► Load Kill ──► Fuse Block ──► Bucks ──► Loads
                     │
@@ -82,14 +82,14 @@ sudo apt install graphviz        # WireViz uses the `dot` binary
 - [ ] Mount in case loosely
 
 ### Phase 2 — Power & telemetry
-- [ ] Full power system: Wanderer 10A, WUPP fuse block, DROK buck for Pi server, system disconnect + load kill switches, Blue Sea 2104 PowerPost as positive distribution point
+- [ ] Full power system: Wanderer 10A, WUPP fuse block, DROK buck for Pi server, system disconnect + load kill switches, LENKRAD M6 distribution post as positive distribution point
 - [ ] Configure Wanderer LCD: change battery type SLD → **LI**; verify 14.4V boost / 13.6V float
 - [ ] Wire DROK output to Waveshare 5V power screw terminal (trim DROK to ~5.1-5.15V no-load before connecting)
 - [ ] Verify no undervoltage warnings under NVMe + fan + WiFi AP load
 - [ ] Solar panel charging tested
 - [ ] BT-1 module + `cyrils/renogy-bt` telemetry working on the Pi
 - [ ] E-ink battery dashboard daemon + LCD1602 live ops strip running
-- [ ] 3D print mounting plate (cutouts for switches, displays, PowerPost, router cradle)
+- [ ] 3D print mounting plate (cutouts for switches, displays, M6 distribution post, router cradle)
 - [ ] Drill 2× ~10mm holes for RP-SMA antenna bulkheads (gasketed)
 - [ ] Run RP-SMA pigtails from router to bulkheads, mount stock antennas externally
 - [ ] Power Shadow Ext from Wanderer's 5V/2A USB output

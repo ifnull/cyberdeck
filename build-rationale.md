@@ -208,16 +208,16 @@ The case runs open when antennas are deployed. When traveling or storing, unscre
 | LiFePO4 12V 5Ah / 64Wh battery (on hand) | Safe chemistry (no thermal runaway), 2000+ cycle life, flat discharge curve. Using a spare 5Ah pack already on the shelf instead of buying a 6Ah. SLA-style form factor with F1 (or F2 — verify) male spade tabs on top. | $0 (spare) |
 | Battery termination kit | Female fully-insulated quick-disconnect terminals matching the battery's tab size (F1 = 0.187" / 4.75mm, F2 = 0.250" / 6.35mm) — measure the actual tab before ordering, or buy an assortment pack with both sizes. 14 AWG marine-grade tinned-copper wire pigtails (~6") from each terminal to ring lugs (#10 stud) that bolt onto the system disconnect. Keep heat-shrink over each crimp. A proper ratcheting crimper (Klein, IWISS, or Engineer brand, ~$25) makes durable joints; plier-style crimpers fail under vibration. | $10-30 (terminals + lugs + crimper if not on hand) |
 | NOCO X-Connect ring-terminal pigtail (permanent install for smart charging) | The NOCO Genius ships with both alligator clamps and X-Connect ring-terminal leads. The ring-terminal lead is a short cable ending in two ring lugs (positive and negative) on one end and the NOCO X-Connect plug on the other. Stack the ring lugs onto the battery distribution post (positive lead) and fuse block (−) bus (negative lead), so the NOCO X-Connect plug dangles inside the case ready to receive the NOCO's main cable. Bypasses both the system disconnect and the load kill switch — direct battery access — so the NOCO can charge the pack regardless of switch state. | $0 (ships with NOCO Genius) |
-| Blue Sea 2104 PowerPost Plus (battery distribution post, positive side) | Single threaded stud (5/16" / M8) with insulated base and clear protective cap. Acts as the central stacking point for the positive lead before the system disconnect — battery (+) wire, wire to system disconnect input, NOCO X-Connect (+) lead, and one spare for future expansion all stack here. Rated 600A (massively above our ~10A use), but the value is the form factor and the cap that prevents accidental shorts during install. Generic Amazon equivalents work fine at ~$5-8 if budget matters more than brand. | $10-15 |
+| LENKRAD M6 distribution post (positive side) — or equivalent generic M6 marine bus stud | Single **M6 (6mm)** threaded stud on insulated red base, 150A rated, marine/auto grade. Stainless steel hardware (lock washer + nut included). 23mm stud length accommodates 3-4 stacked ring lugs comfortably. Acts as the central stacking point for the positive lead before the system disconnect — battery (+) wire, wire to system disconnect input, NOCO X-Connect (+) lead, and one spare for future expansion all stack here. Stud size matches the connector kit's M6 ring lugs directly (no supplemental ring-lug purchase needed). The post does not ship with a protective cap — wrap a few turns of electrical tape over the assembled nut/stack as temporary protection, or buy a generic M6 terminal boot for a permanent solution. | $7.99 |
 | Renogy Wanderer 10A charge controller | PWM, 12V, negative ground. Selectable battery profiles include LI (LiFePO4: 14.4V boost / 13.6V float / 10.8V LVD) — must be set via LCD menu after install (default is SLD lead-acid). 10A is plenty for the 50W panel and a future 100W upgrade; 100W+ panels are earmarked for the separate solar generator project anyway. RS232 / RJ12 port accepts Renogy BT-1 Bluetooth module for telemetry (officially compatible per Renogy's product page). Built-in 5V/2A dual USB output on the front (see Power System). Lives inside the case. | $20 |
-| 12V buck converter to 5V 3A (uConsole) | USB-C output module, clean power for uConsole. | $5-8 |
+| 12V buck converter to 5V (≥3A) for uConsole | USB-C output module, clean power for uConsole. uConsole peaks ~3A on 5V, so 3A is the minimum spec — but if a 5A module is cheaper or the same price, buy that instead. Higher-rated bucks run cooler at the same load and last longer; there's no downside to oversizing within reason. | $5-12 |
 | 12V buck converter to 5V 5A (Pi server) — **DROK 12V→5V/5A** recommended | Feeds the Waveshare case's rear 5V power screw terminal directly — bypasses USB-C PD negotiation and avoids undervoltage under NVMe + fan load. The DROK module (~$10) is a solid choice: synchronous rectification (~93-95% efficient), reverse-polarity protection, both screw-terminal and USB-A outputs at 5V/5A. Use the **screw-terminal output** to feed the Waveshare case (cleaner than USB-A → adapter). Set output to ~5.1–5.15V (measured no-load) to compensate for wire drop; verify at the Pi under load. Use 18 AWG minimum on the short 5V run from buck to case. | $10-20 |
-| 12V buck converter to 5V 2A (x1) | For peripherals. **Optional — can be dropped** if you use the Wanderer 10A's built-in 5V 2A USB output instead. The controller's USB is fed through its own internal regulator off the 12V battery bus, so it's electrically equivalent to a dedicated buck. Saves $5 and a mounting position. | $0-5 |
+| 12V buck converter to 5V (≥2A) for peripherals | **Optional — can be dropped** if you use the Wanderer 10A's built-in 5V/2A USB output instead. The controller's USB is fed through its own internal regulator off the 12V battery bus, so it's electrically equivalent to a dedicated buck. Saves $5 and a mounting position. If you do install a dedicated peripheral buck, **3A modules are often cheaper than 2A** in the hobby market because of volume — buy whichever is cheapest at ≥2A rating, no downside to oversizing. | $0-8 |
 | WUPP 6-way ATC fuse block with integrated negative bus + LED fault indicators (on hand) | 6 fused positive circuits and a built-in negative bus in one unit — eliminates the need for a separate ground bar. Per-circuit red LEDs light when a fuse blows (huge debugging win). Clear cover, ~30A bus rating, 12-24V DC. Only 2-3 circuits will be used; the rest are spares for future expansion (direct-12V SDR, antenna preamp, second Pi, etc.). Suggested fuse sizes: 5A for the Pi-server buck, 5A for the uConsole buck, 3A for the optional peripherals buck. | $15-20 (or $0 if on hand) |
 | 10W folding solar panel | For field charging. Plugs into panel-mount SAE on case wall. | $20-30 |
 | SAE 2-pin connectors and pigtails | Industry-standard 12V DC connector used by NOCO, CTEK, Battery Tender, Optimate, motorcycle/RV trickle chargers, and most consumer solar adapters. Cheap, abundant pre-made cables, MC4-to-SAE adapters readily available for the solar panel. **Polarity is convention, not enforced** — standard is positive on the female pin (covered by the plastic shell), which matches NOCO / Battery Tender / CTEK. Verify any new adapter with a multimeter on first use; mark verified cables with a colored shrink-wrap ring. | $5-10 (small kit of pairs and pigtails) |
 | SAE 2-pin panel mount with weather cap | DC input on the case wall, gasketed for splash resistance. One of three case-wall holes (the other two are RP-SMA antenna bulkheads). | $5-10 |
-| System disconnect + load kill switch (matching pair) — **Gebildet SPST 10A** or equivalent | Two identical panel-mount toggle switches rated 10A @ 12V (~2× headroom over our 5-6A worst case). Metal bat handle, M4/M5 threaded screw-stud terminals (compatible with #8 or #10 ring lugs — stack two ring lugs at the SYSDISC OUT post for the CC + Load Kill split, same pattern as the PowerPost). Sold as a 4-pack (~$8) which gives both required switches plus two field spares. The included red flip-up safety cover prevents accidental actuation in transport. **System disconnect** sits on the battery's positive lead before the charge controller — flipping it off fully isolates the controller and load bus from the battery, eliminating the controller's ~10mA parasitic draw during long-term storage. (The NOCO X-Connect taps upstream of this switch so smart charging still works regardless.) **Load kill switch** sits downstream of the system disconnect, cutting only the fuse block / loads while leaving the controller energized so solar can passively maintain the battery. Differentiate with engraved labels ("SYSTEM" / "LOAD") plus colored shrink-wrap rings (red for system, black for load) to prevent muscle-memory mistakes. | $8 (4-pack) |
+| System disconnect + load kill switch (matching pair) — **Gebildet SPST 10A** or equivalent | Two identical panel-mount toggle switches rated 10A @ 12V (~2× headroom over our 5-6A worst case). Metal bat handle, M4/M5 threaded screw-stud terminals (compatible with #8 or #10 ring lugs — stack two ring lugs at the SYSDISC OUT post for the CC + Load Kill split, same pattern as the M6 distribution post). Sold as a 4-pack (~$8) which gives both required switches plus two field spares. The included red flip-up safety cover prevents accidental actuation in transport. **System disconnect** sits on the battery's positive lead before the charge controller — flipping it off fully isolates the controller and load bus from the battery, eliminating the controller's ~10mA parasitic draw during long-term storage. (The NOCO X-Connect taps upstream of this switch so smart charging still works regardless.) **Load kill switch** sits downstream of the system disconnect, cutting only the fuse block / loads while leaving the controller energized so solar can passively maintain the battery. Differentiate with engraved labels ("SYSTEM" / "LOAD") plus colored shrink-wrap rings (red for system, black for load) to prevent muscle-memory mistakes. | $8 (4-pack) |
 | 12V 5A regulated wall brick (Mean Well GST60A12 or equivalent) | Primary wall charging. 5A is enough to run loads and charge the battery simultaneously; the old 2A spec could only run loads. Terminates in SAE 2-pin via a barrel-to-SAE pigtail. | $25-30 |
 | Cig lighter plug → SAE cable | Charge from a vehicle, a solar generator (Jackery / EcoFlow / Bluetti 12V output), or a propane/inverter generator's 12V accessory port. | $8-12 |
 | SAE ↔ SAE cable (~3 ft) | Parallel an external 12V LiFePO4 pack into the case input for extended runtime or emergency top-up. Slow trickle as voltages equalize — fine for topup, not fast charge. | $8-12 |
@@ -310,7 +310,7 @@ The Renogy Wanderer Li draws ~10mA continuously from the battery for its own ope
 
 **Wiring topology — battery distribution post is the central stacking point:**
 
-The Blue Sea 2104 PowerPost (or equivalent) is bolted to the 3D printed plate near the battery. A single short pigtail runs from the battery (+) tab to the post; everything else stacks on the post via ring lugs. This keeps battery-side wiring tidy, eliminates congestion at the system disconnect's terminals, and makes future expansion (additional sources, second battery in parallel, etc.) trivial.
+The LENKRAD M6 distribution post (or equivalent) is bolted to the 3D printed plate near the battery. A single short pigtail runs from the battery (+) tab to the post; everything else stacks on the post via ring lugs. This keeps battery-side wiring tidy, eliminates congestion at the system disconnect's terminals, and makes future expansion (additional sources, second battery in parallel, etc.) trivial.
 
 **Full + / − wiring diagram:**
 
@@ -335,13 +335,13 @@ pip install --user wireviz       # or: pipx install wireviz
 sudo apt install graphviz        # WireViz needs the `dot` binary
 ```
 
-**Reading the diagram:** positive (+) lead flows from battery → PowerPost (where it branches to the NOCO X-Connect bypass and the main path) → main fuse → system disconnect → splits to charge controller and load kill switch → fuse block → bucks. Negative (−) lead flows from battery → fuse block (−) bus, where the charge controller's BAT−, the NOCO's X-Connect (−), and all load returns also land. Negative bypasses both switches; only positive is interrupted.
+**Reading the diagram:** positive (+) lead flows from battery → M6 distribution post (where it branches to the NOCO X-Connect bypass and the main path) → main fuse → system disconnect → splits to charge controller and load kill switch → fuse block → bucks. Negative (−) lead flows from battery → fuse block (−) bus, where the charge controller's BAT−, the NOCO's X-Connect (−), and all load returns also land. Negative bypasses both switches; only positive is interrupted.
 
 ```
 Battery (+) tab
   ↓ F1 female spade
   ↓ 14 AWG red wire (~3-4")
-  ↓ ring lug (5/16" stud)
+  ↓ ring lug (M6 stud)
   ↓
 [ POSITIVE DISTRIBUTION POST ]   ← stacked ring lugs:
   ├── Battery (+) feed (incoming)
@@ -367,7 +367,7 @@ Battery (−) tab
   └── Common return for all loads
 ```
 
-The negative side reuses the fuse block's integrated negative bus rather than a dedicated post — less hardware, same electrical result. If symmetry matters, add a second PowerPost for the negative side instead of using the fuse block bus (purely stylistic — adds ~$12 and one mounting position).
+The negative side reuses the fuse block's integrated negative bus rather than a dedicated post — less hardware, same electrical result. If symmetry matters, add a second M6 distribution post (or a Heart Horse twin-stud pair) for the negative side instead of using the fuse block bus — purely stylistic, adds ~$8-15 and one or two mounting positions.
 
 **Wiring path for the Pi server feed:**
 
@@ -542,15 +542,16 @@ The case is designed around open-lid operation. Active ventilation is not needed
 - [ ] Mount in Pelican case loosely
 
 ### Phase 2 — Cyberdeck Power & Polish
-- [ ] Full power system: Renogy Wanderer 10A, WUPP 6-way fuse block, buck converters (incl. DROK 5V 5A for Pi server), system disconnect + load kill switch (labeled pair), Blue Sea 2104 PowerPost as positive distribution point
+- [ ] Full power system: Renogy Wanderer 10A, WUPP 6-way fuse block, buck converters (incl. DROK 5V 5A for Pi server), system disconnect + load kill switch (labeled pair), LENKRAD M6 distribution post as positive stacking point
+- [ ] Wrap electrical tape over the assembled M6 distribution post stud/nut for short-circuit protection (or fit a generic M6 terminal boot)
 - [ ] Configure Wanderer LCD: SELECT/ENTER through menu, change battery type from default SLD to **LI**; verify displayed setpoints show 14.4V boost / 13.6V float
-- [ ] Decide whether to keep the 5V/2A peripheral buck or use the controller's built-in 5V/2A USB output
+- [ ] Decide whether to install a separate 5V (≥2A) peripheral buck or use the controller's built-in 5V/2A USB output
 - [ ] Wire DROK 5V/5A buck output to Waveshare case rear power screw terminal (trim DROK to ~5.1-5.15V no-load before connecting)
 - [ ] Verify no undervoltage warnings under NVMe + fan + WiFi AP load
 - [ ] Solar panel charging tested
 - [ ] BT-1 module + `cyrils/renogy-bt` telemetry working on the Pi
 - [ ] E-ink battery dashboard daemon + LCD1602 live ops strip running
-- [ ] 3D print mounting plate (with cutouts for system disconnect + load kill switch, LCD1602, e-ink, mount points for the PowerPost, and a cradle/sleeve for the Shadow Ext router)
+- [ ] 3D print mounting plate (with cutouts for system disconnect + load kill switch, LCD1602, e-ink, mount points for the M6 distribution post, and a cradle/sleeve for the Shadow Ext router)
 - [ ] Drill 2× ~10 mm holes in the case wall for RP-SMA bulkhead antenna mounts (gasket with included rubber washers)
 - [ ] Run RP-SMA pigtails from router to bulkheads, screw stock antennas to the outside of the case
 - [ ] Connect Shadow Ext to Pi via short Ethernet patch (router LAN port → Pi Ethernet)
@@ -587,7 +588,7 @@ The case is designed around open-lid operation. Active ventilation is not needed
 | uConsole (ordered) | $150-200 |
 | Pi 4 + NVMe storage | $70-95 |
 | GL.iNet Shadow Ext router + RP-SMA bulkheads + Ethernet patch | $50-60 |
-| Power system (Renogy Wanderer 10A $20, bucks, WUPP 6-way fuse block on hand, 50W spare panel, SAE, system disconnect + load kill switches, Blue Sea 2104 PowerPost, wall brick, external-source cables, battery termination kit; battery on hand) | $95-160 |
+| Power system (Renogy Wanderer 10A $20, bucks, WUPP 6-way fuse block on hand, 50W spare panel, SAE, system disconnect + load kill switches, LENKRAD M6 distribution post, wall brick, external-source cables, battery termination kit; battery on hand) | $95-160 |
 | Monitoring (BT-1 module; e-ink + LCD1602 on hand; INA226 optional) | $18-30 |
 | 14 AWG marine wire (red + black, ~25 ft each) | $25-40 |
 | Connectors, cables, foam, misc (18 AWG marine wire on hand; CCA not used) | $30-50 |
