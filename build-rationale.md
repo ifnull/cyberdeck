@@ -217,7 +217,7 @@ The case runs open when antennas are deployed. When traveling or storing, unscre
 | 10W folding solar panel | For field charging. Plugs into panel-mount SAE on case wall. | $20-30 |
 | SAE 2-pin connectors and pigtails | Industry-standard 12V DC connector used by NOCO, CTEK, Battery Tender, Optimate, motorcycle/RV trickle chargers, and most consumer solar adapters. Cheap, abundant pre-made cables, MC4-to-SAE adapters readily available for the solar panel. **Polarity is convention, not enforced** — standard is positive on the female pin (covered by the plastic shell), which matches NOCO / Battery Tender / CTEK. Verify any new adapter with a multimeter on first use; mark verified cables with a colored shrink-wrap ring. | $5-10 (small kit of pairs and pigtails) |
 | SAE 2-pin panel mount with weather cap | DC input on the case wall, gasketed for splash resistance. One of three case-wall holes (the other two are RP-SMA antenna bulkheads). | $5-10 |
-| System disconnect + load kill switch (matching pair) | Two identical panel-mount toggle switches rated 20-30A. **System disconnect** sits on the battery's positive lead before the charge controller — flipping it off fully isolates the controller and load bus from the battery, eliminating the controller's ~10mA parasitic draw during long-term storage. (The NOCO X-Connect taps upstream of this switch so smart charging still works regardless.) **Load kill switch** sits downstream of the system disconnect, cutting only the fuse block / loads while leaving the controller energized so solar can passively maintain the battery. Same model for a clean look on the mounting plate; differentiate with engraved labels ("SYSTEM" / "LOAD") plus colored shrink-wrap rings (e.g., red for system, black for load) to prevent muscle-memory mistakes. | $10-20 (pair) |
+| System disconnect + load kill switch (matching pair) — **Gebildet SPST 10A** or equivalent | Two identical panel-mount toggle switches rated 10A @ 12V (~2× headroom over our 5-6A worst case). Metal bat handle, M4/M5 threaded screw-stud terminals (compatible with #8 or #10 ring lugs — stack two ring lugs at the SYSDISC OUT post for the CC + Load Kill split, same pattern as the PowerPost). Sold as a 4-pack (~$8) which gives both required switches plus two field spares. The included red flip-up safety cover prevents accidental actuation in transport. **System disconnect** sits on the battery's positive lead before the charge controller — flipping it off fully isolates the controller and load bus from the battery, eliminating the controller's ~10mA parasitic draw during long-term storage. (The NOCO X-Connect taps upstream of this switch so smart charging still works regardless.) **Load kill switch** sits downstream of the system disconnect, cutting only the fuse block / loads while leaving the controller energized so solar can passively maintain the battery. Differentiate with engraved labels ("SYSTEM" / "LOAD") plus colored shrink-wrap rings (red for system, black for load) to prevent muscle-memory mistakes. | $8 (4-pack) |
 | 12V 5A regulated wall brick (Mean Well GST60A12 or equivalent) | Primary wall charging. 5A is enough to run loads and charge the battery simultaneously; the old 2A spec could only run loads. Terminates in SAE 2-pin via a barrel-to-SAE pigtail. | $25-30 |
 | Cig lighter plug → SAE cable | Charge from a vehicle, a solar generator (Jackery / EcoFlow / Bluetti 12V output), or a propane/inverter generator's 12V accessory port. | $8-12 |
 | SAE ↔ SAE cable (~3 ft) | Parallel an external 12V LiFePO4 pack into the case input for extended runtime or emergency top-up. Slow trickle as voltages equalize — fine for topup, not fast charge. | $8-12 |
@@ -349,10 +349,11 @@ Battery (+) tab
   ├── NOCO X-Connect (+) lead (bypass charging)
   └── Spare for future expansion
 
-System Disconnect input
+System Disconnect input (one ring lug on threaded screw stud)
   ↓ (switch closed)
-System Disconnect output
-  ↓ split: Charge Controller BAT+ and Load Kill Switch input
+System Disconnect output (threaded screw stud — stack TWO ring lugs here)
+  ├── Ring lug → 14 AWG → Charge Controller BAT+ terminal
+  └── Ring lug → 14 AWG → Load Kill Switch IN terminal
 
 Battery (−) tab
   ↓ F1 female spade
