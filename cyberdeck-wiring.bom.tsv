@@ -1,21 +1,22 @@
 Id	Description	Qty	Unit	Designators
 1	Cable, 1 x 14 AWG	2.15	m	W_BAT_FBNEG, W_BAT_POST, W_CC_FBNEG, W_FBNEG_NOCO, W_FUSE_SYSDISC, W_KILL_FBPOS, W_POST_FUSE, W_POST_NOCO, W_SYSDISC_CC, W_SYSDISC_KILL
-2	Cable, 1 x 18 AWG	0.6	m	W_FBNEG_BUCKPI, W_FBNEG_BUCKUC, W_FBPOS_BUCKPI, W_FBPOS_BUCKUC
+2	Cable, 1 x 18 AWG	0.9	m	W_FBNEG_BUCKPI, W_FBNEG_BUCKR, W_FBNEG_BUCKUC, W_FBPOS_BUCKPI, W_FBPOS_BUCKR, W_FBPOS_BUCKUC
 3	Cable, 1 x 24 AWG	0.15	m	W_PI_ROUTER
 4	Cable, 2 x 18 AWG	0.65	m	W_BUCKPI_PI, W_BUCKUC_UC
-5	Cable, 2 x 22 AWG	0.3	m	W_CC_ROUTER
+5	Cable, 2 x 22 AWG	0.3	m	W_BUCKR_ROUTER
 6	Connector, 12V to 5V/3A buck, uConsole feed, 4 pins	1		BUCKUC
 7	Connector, Blue Sea 2104 PowerPost, M8 stud, stacked ring lugs, 1 pins	1		POST
-8	Connector, DROK 12V to 5V/5A, Pi server feed, 4 pins	1		BUCKPI
-9	Connector, GL.iNet GL-AR300M16-Ext, Shadow Ext (5V power, RJ45), 3 pins	1		ROUTER
-10	Connector, Inline ATC Fuse Holder, 20-30A fuse, 2 pins	1		MAINFUSE
-11	Connector, LiFePO4 12V 5Ah, F1 male spade tabs, 2 pins	1		BAT
-12	Connector, Load Kill Switch, SPST 20-30A toggle, 2 pins	1		KILL
-13	Connector, NOCO X-Connect plug, ring-terminal pigtail, 2 pins	1		NOCO
-14	Connector, Raspberry Pi 4B, RJ45 Ethernet, 1 pins	1		PIETH
-15	Connector, Renogy Wanderer 10A, PWM, LI mode (+ 5V/2A USB-A), 4 pins	1		CC
-16	Connector, System Disconnect, SPST 20-30A toggle, 2 pins	1		SYSDISC
-17	Connector, WUPP Fuse Block (+) Bus, 6-way ATC, LED faults, 4 pins	1		FBPOS
-18	Connector, WUPP Fuse Block (-) Bus, integrated negative, 5 pins	1		FBNEG
-19	Connector, Waveshare Pi Case, 5V Power Screw Terminal, 2 pins	1		PI
-20	Connector, uConsole, USB-C 5V input, 2 pins	1		UC
+8	Connector, CPT C1205003, 12V to 5V/3A buck, dual USB-A out (one to router, one spare), 4 pins	1		BUCKR
+9	Connector, DROK 12V to 5V/5A, Pi server feed, 4 pins	1		BUCKPI
+10	Connector, GL.iNet GL-AR300M16-Ext, Shadow Ext (5V power, RJ45), 3 pins	1		ROUTER
+11	Connector, Inline ATC Fuse Holder, 20-30A fuse, 2 pins	1		MAINFUSE
+12	Connector, LiFePO4 12V 5Ah, F1 male spade tabs, 2 pins	1		BAT
+13	Connector, Load Kill Switch, SPST 20-30A toggle, 2 pins	1		KILL
+14	Connector, NOCO X-Connect plug, ring-terminal pigtail, 2 pins	1		NOCO
+15	Connector, Raspberry Pi 4B, RJ45 Ethernet, 1 pins	1		PIETH
+16	Connector, Renogy Wanderer 10A, PWM, LI mode, 2 pins	1		CC
+17	Connector, System Disconnect, SPST 20-30A toggle, 2 pins	1		SYSDISC
+18	Connector, WUPP Fuse Block (+) Bus, 6-way ATC, LED faults, 5 pins	1		FBPOS
+19	Connector, WUPP Fuse Block (-) Bus, integrated negative, 6 pins	1		FBNEG
+20	Connector, Waveshare Pi Case, 5V Power Screw Terminal, 2 pins	1		PI
+21	Connector, uConsole, USB-C 5V input, 2 pins	1		UC

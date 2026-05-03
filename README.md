@@ -16,7 +16,7 @@ Portable, self-contained Pi-based field kit in a hardshell case. LiFePO4 power w
 | Compute | Clockwork uConsole (primary interface) · Raspberry Pi (NVMe) running [nomad-slim](https://github.com/ifnull/nomad-slim) for offline content |
 | Networking | GL.iNet GL-AR300M16-Ext "Shadow Ext" — OpenWrt AP, 2× external RP-SMA antennas through case wall |
 | Comms | NooElec SMArTee XTR SDR + telescoping whip antenna |
-| Power | LiFePO4 12V 5Ah / 64Wh battery · Renogy Wanderer 10A PWM controller (LI mode) · 50W solar panel · DROK 12V→5V/5A buck for Pi · separate buck for uConsole · WUPP 6-way fuse block · LENKRAD M6 distribution post · system disconnect + load kill switches |
+| Power | LiFePO4 12V 5Ah / 64Wh battery · Renogy Wanderer 10A PWM controller (LI mode) · 50W solar panel · DROK 12V→5V/5A buck for Pi · separate ≥3A buck for uConsole · CPT C1205003 12V→5V/3A dual-USB buck for router (downstream of Load Kill) · WUPP 6-way fuse block · LENKRAD M6 distribution post · system disconnect + load kill switches |
 | Monitoring | BT-1 Bluetooth telemetry from charge controller · Waveshare e-ink battery dashboard · SunFounder LCD1602 live ops strip |
 | External power | SAE 2-pin input (panel mount) · NOCO Genius X-Connect ring-terminal pigtail (bypasses both switches) |
 
@@ -85,14 +85,15 @@ sudo apt install graphviz        # WireViz uses the `dot` binary
 - [ ] Full power system: Wanderer 10A, WUPP fuse block, DROK buck for Pi server, system disconnect + load kill switches, LENKRAD M6 distribution post as positive distribution point
 - [ ] Configure Wanderer LCD: change battery type SLD → **LI**; verify 14.4V boost / 13.6V float
 - [ ] Wire DROK output to Waveshare 5V power screw terminal (trim DROK to ~5.1-5.15V no-load before connecting)
-- [ ] Verify no undervoltage warnings under NVMe + fan + WiFi AP load
+- [x] Verify no undervoltage warnings under NVMe + fan + WiFi AP load
+- [ ] Wire CPT C1205003 buck on its own FBPOS slot (2A fuse); USB-A → micro-USB to router
+- [ ] Confirm Load Kill OFF fully de-energizes Pi, uConsole, and router
 - [ ] Solar panel charging tested
 - [ ] BT-1 module + `cyrils/renogy-bt` telemetry working on the Pi
 - [ ] E-ink battery dashboard daemon + LCD1602 live ops strip running
 - [ ] 3D print mounting plate (cutouts for switches, displays, M6 distribution post, router cradle)
 - [ ] Drill 2× ~10mm holes for RP-SMA antenna bulkheads (gasketed)
 - [ ] Run RP-SMA pigtails from router to bulkheads, mount stock antennas externally
-- [ ] Power Shadow Ext from Wanderer's 5V/2A USB output
 - [ ] SAE 2-pin panel mount installed (single hole)
 - [ ] Cable management
 
@@ -137,6 +138,11 @@ See nomad-slim's repo for installation, ZIM file management, and configuration.
 ├── cyberdeck-wiring.svg         ← generated diagram (committed for inline GitHub render)
 ├── cyberdeck-wiring.bom.tsv     ← generated BOM
 ├── build-wiring-diagram.sh      ← regen script
+├── renogy-agent/                ← Pi-side BT-1 telemetry agent + setup guide
+│   ├── README.md                ← install / config / troubleshooting
+│   ├── agent.py
+│   ├── config.ini
+│   └── systemd/renogy-agent.service
 └── .githooks/
     └── pre-commit               ← auto-regen SVG when YAML is staged
 ```

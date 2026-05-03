@@ -1,0 +1,24 @@
+[Unit]
+Description=Cyberdeck Renogy BT-1 telemetry agent
+Documentation=https://github.com/ifnull/cyberdeck
+After=bluetooth.service network-online.target
+Wants=bluetooth.service
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/renogy-agent
+ExecStart=/usr/bin/python3 /home/pi/renogy-agent/agent.py
+Restart=always
+RestartSec=15
+
+# Auto-create /run/renogy owned by pi:pi on each start; cleaned up on stop.
+RuntimeDirectory=renogy
+RuntimeDirectoryMode=0755
+
+# Logging goes to journald automatically; tail with:
+#   journalctl -u renogy-agent -f
+
+[Install]
+WantedBy=multi-user.target

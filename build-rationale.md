@@ -29,14 +29,14 @@ graph TD
     end
 
     subgraph Inside Case
-        CC[Renogy Wanderer 10A\nCharge Controller\n+ built-in 5V 2A USB]
+        CC[Renogy Wanderer 10A\nCharge Controller]
         BAT[LiFePO4 Battery\n12V 5Ah / 64Wh]
         SYSDISC[System Disconnect\nbattery side]
         KILL[Load Kill Switch\nload side]
         FUSE[WUPP 6-Way Fuse Block\n12V+ bus / negative bus\nLED fault indicators]
         BUCK1[Buck Converter\n12V to 5V 3A\nuConsole]
         BUCK2[DROK Buck Converter\n12V to 5V 5A\nPi Server\nvia Waveshare 5V power screw terminal]
-        BUCK3[Buck Converter\n12V to 5V 2A\nPeripherals]
+        BUCK3[CPT C1205003 Buck\n12V to 5V 3A dual USB-A\nGL.iNet router + spare 5V port]
     end
 
     SOLAR --> PWR_IN
@@ -209,11 +209,11 @@ The case runs open when antennas are deployed. When traveling or storing, unscre
 | Battery termination kit | Female fully-insulated quick-disconnect terminals matching the battery's tab size (F1 = 0.187" / 4.75mm, F2 = 0.250" / 6.35mm) — measure the actual tab before ordering, or buy an assortment pack with both sizes. 14 AWG marine-grade tinned-copper wire pigtails (~6") from each terminal to ring lugs (#10 stud) that bolt onto the system disconnect. Keep heat-shrink over each crimp. A proper ratcheting crimper (Klein, IWISS, or Engineer brand, ~$25) makes durable joints; plier-style crimpers fail under vibration. | $10-30 (terminals + lugs + crimper if not on hand) |
 | NOCO X-Connect ring-terminal pigtail (permanent install for smart charging) | The NOCO Genius ships with both alligator clamps and X-Connect ring-terminal leads. The ring-terminal lead is a short cable ending in two ring lugs (positive and negative) on one end and the NOCO X-Connect plug on the other. Stack the ring lugs onto the battery distribution post (positive lead) and fuse block (−) bus (negative lead), so the NOCO X-Connect plug dangles inside the case ready to receive the NOCO's main cable. Bypasses both the system disconnect and the load kill switch — direct battery access — so the NOCO can charge the pack regardless of switch state. | $0 (ships with NOCO Genius) |
 | LENKRAD M6 distribution post (positive side) — or equivalent generic M6 marine bus stud | Single **M6 (6mm)** threaded stud on insulated red base, 150A rated, marine/auto grade. Stainless steel hardware (lock washer + nut included). 23mm stud length accommodates 3-4 stacked ring lugs comfortably. Acts as the central stacking point for the positive lead before the system disconnect — battery (+) wire, wire to system disconnect input, NOCO X-Connect (+) lead, and one spare for future expansion all stack here. Stud size matches the connector kit's M6 ring lugs directly (no supplemental ring-lug purchase needed). The post does not ship with a protective cap — wrap a few turns of electrical tape over the assembled nut/stack as temporary protection, or buy a generic M6 terminal boot for a permanent solution. | $7.99 |
-| Renogy Wanderer 10A charge controller | PWM, 12V, negative ground. Selectable battery profiles include LI (LiFePO4: 14.4V boost / 13.6V float / 10.8V LVD) — must be set via LCD menu after install (default is SLD lead-acid). 10A is plenty for the 50W panel and a future 100W upgrade; 100W+ panels are earmarked for the separate solar generator project anyway. RS232 / RJ12 port accepts Renogy BT-1 Bluetooth module for telemetry (officially compatible per Renogy's product page). Built-in 5V/2A dual USB output on the front (see Power System). Lives inside the case. | $20 |
+| Renogy Wanderer 10A charge controller | PWM, 12V, negative ground. Selectable battery profiles include LI (LiFePO4: 14.4V boost / 13.6V float / 10.8V LVD) — must be set via LCD menu after install (default is SLD lead-acid). 10A is plenty for the 50W panel and a future 100W upgrade; 100W+ panels are earmarked for the separate solar generator project anyway. RS232 / RJ12 port accepts Renogy BT-1 Bluetooth module for telemetry (officially compatible per Renogy's product page). Has a built-in 5V/2A dual USB output on the front, but it sits upstream of the load kill switch — **left unused** so the load kill cleanly cuts everything. Lives inside the case. | $20 |
 | 12V buck converter to 5V (≥3A) for uConsole | USB-C output module, clean power for uConsole. uConsole peaks ~3A on 5V, so 3A is the minimum spec — but if a 5A module is cheaper or the same price, buy that instead. Higher-rated bucks run cooler at the same load and last longer; there's no downside to oversizing within reason. | $5-12 |
 | 12V buck converter to 5V 5A (Pi server) — **DROK 12V→5V/5A** recommended | Feeds the Waveshare case's rear 5V power screw terminal directly — bypasses USB-C PD negotiation and avoids undervoltage under NVMe + fan load. The DROK module (~$10) is a solid choice: synchronous rectification (~93-95% efficient), reverse-polarity protection, both screw-terminal and USB-A outputs at 5V/5A. Use the **screw-terminal output** to feed the Waveshare case (cleaner than USB-A → adapter). Set output to ~5.1–5.15V (measured no-load) to compensate for wire drop; verify at the Pi under load. Use 18 AWG minimum on the short 5V run from buck to case. | $10-20 |
-| 12V buck converter to 5V (≥2A) for peripherals | **Optional — can be dropped** if you use the Wanderer 10A's built-in 5V/2A USB output instead. The controller's USB is fed through its own internal regulator off the 12V battery bus, so it's electrically equivalent to a dedicated buck. Saves $5 and a mounting position. If you do install a dedicated peripheral buck, **3A modules are often cheaper than 2A** in the hobby market because of volume — buy whichever is cheapest at ≥2A rating, no downside to oversizing. | $0-8 |
-| WUPP 6-way ATC fuse block with integrated negative bus + LED fault indicators (on hand) | 6 fused positive circuits and a built-in negative bus in one unit — eliminates the need for a separate ground bar. Per-circuit red LEDs light when a fuse blows (huge debugging win). Clear cover, ~30A bus rating, 12-24V DC. Only 2-3 circuits will be used; the rest are spares for future expansion (direct-12V SDR, antenna preamp, second Pi, etc.). Suggested fuse sizes: 5A for the Pi-server buck, 5A for the uConsole buck, 3A for the optional peripherals buck. | $15-20 (or $0 if on hand) |
+| 12V buck converter to 5V/3A for router — **CPT C1205003** (on hand) | Dedicated buck powering the GL.iNet Shadow Ext, downstream of the Load Kill switch so the router is fully de-energized when Load Kill is OFF (the Wanderer's built-in USB sits upstream of Load Kill, so it can't satisfy that requirement). Generic in-car charger module: 12V→5V/3A with two USB-A outputs on a Y-split. Router draws ~0.5A, leaving the second USB-A as a free 5V opportunistic charge port (phone, headlamp, etc.) that's also under the Load Kill umbrella. Verify output at 5.0–5.15V under load before final mount; cheap modules can sag under spec. Keep a $5 spare in the parts kit since the electrolytics are the wear item. | $0 (on hand) |
+| WUPP 6-way ATC fuse block with integrated negative bus + LED fault indicators (on hand) | 6 fused positive circuits and a built-in negative bus in one unit — eliminates the need for a separate ground bar. Per-circuit red LEDs light when a fuse blows (huge debugging win). Clear cover, ~30A bus rating, 12-24V DC. 3 circuits used (uConsole buck, Pi buck, router buck); the rest are spares for future expansion (direct-12V SDR, antenna preamp, second Pi, etc.). Suggested fuse sizes: 5A uConsole buck, 7.5A Pi buck, 2A router buck. | $15-20 (or $0 if on hand) |
 | 10W folding solar panel | For field charging. Plugs into panel-mount SAE on case wall. | $20-30 |
 | SAE 2-pin connectors and pigtails | Industry-standard 12V DC connector used by NOCO, CTEK, Battery Tender, Optimate, motorcycle/RV trickle chargers, and most consumer solar adapters. Cheap, abundant pre-made cables, MC4-to-SAE adapters readily available for the solar panel. **Polarity is convention, not enforced** — standard is positive on the female pin (covered by the plastic shell), which matches NOCO / Battery Tender / CTEK. Verify any new adapter with a multimeter on first use; mark verified cables with a colored shrink-wrap ring. | $5-10 (small kit of pairs and pigtails) |
 | SAE 2-pin panel mount with weather cap | DC input on the case wall, gasketed for splash resistance. One of three case-wall holes (the other two are RP-SMA antenna bulkheads). | $5-10 |
@@ -269,19 +269,21 @@ A common operating pattern: flip system disconnect OFF, plug NOCO in, charge to 
 
 **What goes on the fuse block — and what doesn't:**
 
-Only devices that draw power directly from the 12V bus need a fused circuit. Anything downstream of a buck (i.e., on a 5V rail) is already protected by the buck's current limit + the buck's upstream fuse. Anything powered by the charge controller (BT-1 over RJ12, controller's built-in USB output) is on the controller's side of the bus and not routed through the fuse block at all.
+Only devices that draw power directly from the 12V bus need a fused circuit. Anything downstream of a buck (i.e., on a 5V rail) is already protected by the buck's current limit + the buck's upstream fuse. Anything powered directly by the charge controller (BT-1 over RJ12) is on the controller's side of the bus and not routed through the fuse block at all.
 
 | Device | Power source | Needs fused circuit? |
 |--------|-------------|----------------------|
 | Buck #1 → uConsole | 12V bus | **Yes — 5A fuse** |
-| Buck #2 → Pi server (Waveshare 12V terminals) | 12V bus | **Yes — 5A fuse** |
-| Buck #3 → peripherals (optional) | 12V bus | **3A fuse** if used; can be skipped in favor of the controller's 5V/2A USB output |
+| Buck #2 → Pi server (Waveshare 5V terminal) | 12V bus | **Yes — 7.5A fuse** |
+| Buck #3 (CPT C1205003) → GL.iNet router | 12V bus | **Yes — 2A fuse** |
 | E-ink display | Pi GPIO 5V | No — Pi's circuit covers it |
 | LCD1602 | Pi GPIO 5V | No — Pi's circuit covers it |
 | INA226 sensor (optional v2) | Pi GPIO 3.3V via I²C | No — Pi's circuit covers it; the shunt sits inline on the 12V bus separately |
 | BT-1 Bluetooth module | Charge controller via RJ12 | No — controller-side power, never touches the fuse block |
 
-Realistic fuse-block usage is **2-3 of the 6 circuits**, leaving 3-4 spares for future expansion (direct-12V SDR power rail, antenna preamp/LNA, additional always-on sensor, second Pi if integrating the rooftop station).
+Realistic fuse-block usage is **3 of the 6 circuits**, leaving 3 spares for future expansion (direct-12V SDR power rail, antenna preamp/LNA, additional always-on sensor, second Pi if integrating the rooftop station).
+
+**Why a dedicated buck for the router instead of the controller's USB:** the Wanderer's built-in 5V/2A USB output is fed from the controller's load terminal, which sits *upstream* of the Load Kill switch. Powering the router from there would leave it energized whenever the controller is — defeating the purpose of Load Kill. The CPT C1205003 buck taps the fuse block (downstream of Load Kill) instead, so flipping Load Kill OFF cleanly de-energizes Pi, uConsole, and router together.
 
 **System disconnect vs. load kill switch — switch state matrix:**
 
@@ -542,12 +544,13 @@ The case is designed around open-lid operation. Active ventilation is not needed
 - [ ] Mount in Pelican case loosely
 
 ### Phase 2 — Cyberdeck Power & Polish
-- [ ] Full power system: Renogy Wanderer 10A, WUPP 6-way fuse block, buck converters (incl. DROK 5V 5A for Pi server), system disconnect + load kill switch (labeled pair), LENKRAD M6 distribution post as positive stacking point
+- [ ] Full power system: Renogy Wanderer 10A, WUPP 6-way fuse block, buck converters (DROK 5V/5A for Pi server, ≥3A buck for uConsole, CPT C1205003 5V/3A for router), system disconnect + load kill switch (labeled pair), LENKRAD M6 distribution post as positive stacking point
 - [ ] Wrap electrical tape over the assembled M6 distribution post stud/nut for short-circuit protection (or fit a generic M6 terminal boot)
 - [ ] Configure Wanderer LCD: SELECT/ENTER through menu, change battery type from default SLD to **LI**; verify displayed setpoints show 14.4V boost / 13.6V float
-- [ ] Decide whether to install a separate 5V (≥2A) peripheral buck or use the controller's built-in 5V/2A USB output
 - [ ] Wire DROK 5V/5A buck output to Waveshare case rear power screw terminal (trim DROK to ~5.1-5.15V no-load before connecting)
-- [ ] Verify no undervoltage warnings under NVMe + fan + WiFi AP load
+- [x] Verify no undervoltage warnings under NVMe + fan + WiFi AP load
+- [ ] Wire CPT C1205003 buck on its own FBPOS slot (2A fuse); verify 5V output under load (~0.5A router draw); USB-A → micro-USB to router
+- [ ] Confirm Load Kill OFF fully de-energizes Pi, uConsole, and router (verify with DMM at each load)
 - [ ] Solar panel charging tested
 - [ ] BT-1 module + `cyrils/renogy-bt` telemetry working on the Pi
 - [ ] E-ink battery dashboard daemon + LCD1602 live ops strip running
@@ -555,7 +558,6 @@ The case is designed around open-lid operation. Active ventilation is not needed
 - [ ] Drill 2× ~10 mm holes in the case wall for RP-SMA bulkhead antenna mounts (gasket with included rubber washers)
 - [ ] Run RP-SMA pigtails from router to bulkheads, screw stock antennas to the outside of the case
 - [ ] Connect Shadow Ext to Pi via short Ethernet patch (router LAN port → Pi Ethernet)
-- [ ] Power the Shadow Ext from the Wanderer's built-in 5V/2A USB output
 - [ ] Kaizen foam custom cut
 - [ ] SAE 2-pin panel mount (single hole)
 - [ ] Cable management
@@ -577,6 +579,11 @@ The case is designed around open-lid operation. Active ventilation is not needed
 - [ ] Configure built-in GPS
 - [ ] Configure built-in RTL-SDR
 - [ ] Retire NooElec SDR from cyberdeck (repurpose or keep as spare)
+
+### Future enhancements (no phase)
+- [ ] **Router auto-halt on low battery** — once OpenWrt is flashed on the GL.iNet Shadow Ext, install a no-password SSH key from the Pi to the router and have `renogy-agent`'s `trigger_shutdown()` SSH `poweroff` to the router before halting the Pi. Drops residual draw to near-zero in the LVD scenario. Marker comment is in `renogy-agent/agent.py`; full design in `renogy-agent/README.md` § "Future enhancements".
+- [ ] **Persistent BLE connection for renogy-agent** — current pattern restarts the script on every poll cycle (one connect/read/disconnect per ~30 s). Wrap `client.start()` in an internal loop so one BLE connection serves many reads. Eliminates BT-1 stress from rapid reconnects.
+- [ ] **MQTT publish from renogy-agent** — once a local mosquitto broker is running, enable `[mqtt]` in `renogy-agent/config.ini` for cleaner multi-consumer fanout (Home Assistant, e-ink dashboard, LCD ops strip).
 
 ---
 

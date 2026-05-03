@@ -33,8 +33,8 @@ connectors:
 
   CC:
     type: Renogy Wanderer 10A
-    subtype: PWM, LI mode (+ 5V/2A USB-A)
-    pinlabels: [BATp, BATn, USBp, USBn]
+    subtype: PWM, LI mode
+    pinlabels: [BATp, BATn]
 
   KILL:
     type: Load Kill Switch
@@ -44,12 +44,12 @@ connectors:
   FBPOS:
     type: WUPP Fuse Block (+) Bus
     subtype: 6-way ATC, LED faults
-    pinlabels: [IN, F1, F2, F3]
+    pinlabels: [IN, F1, F2, F3, F4]
 
   FBNEG:
     type: WUPP Fuse Block (-) Bus
     subtype: integrated negative
-    pinlabels: [IN, N1, N2, N3, N4]
+    pinlabels: [IN, N1, N2, N3, N4, N5]
 
   BUCKPI:
     type: DROK 12V to 5V/5A
@@ -59,6 +59,11 @@ connectors:
   BUCKUC:
     type: 12V to 5V/3A buck
     subtype: uConsole feed
+    pinlabels: [INp, INn, OUTp, OUTn]
+
+  BUCKR:
+    type: CPT C1205003
+    subtype: 12V to 5V/3A buck, dual USB-A out (one to router, one spare)
     pinlabels: [INp, INn, OUTp, OUTn]
 
   PI:
@@ -136,6 +141,12 @@ cables:
     wirecount: 1
     colors: [RD]
 
+  W_FBPOS_BUCKR:
+    gauge: 18 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [RD]
+
   W_BUCKPI_PI:
     gauge: 18 AWG
     length: 0.15
@@ -172,6 +183,12 @@ cables:
     wirecount: 1
     colors: [BK]
 
+  W_FBNEG_BUCKR:
+    gauge: 18 AWG
+    length: 0.15
+    wirecount: 1
+    colors: [BK]
+
   W_POST_NOCO:
     gauge: 14 AWG
     length: 0.3
@@ -186,12 +203,12 @@ cables:
     colors: [BK]
     notes: NOCO X-Connect bypass (negative)
 
-  W_CC_ROUTER:
+  W_BUCKR_ROUTER:
     gauge: 22 AWG
     length: 0.3
     wirecount: 2
     colors: [RD, BK]
-    notes: USB-A to micro-USB, powers router from controller's built-in 5V/2A USB output
+    notes: USB-A (from BUCKR port 1) to micro-USB router power input
 
   W_PI_ROUTER:
     gauge: 24 AWG
@@ -242,6 +259,11 @@ connections:
     - W_FBPOS_BUCKUC: [1]
     - BUCKUC: [1]
 
+  -
+    - FBPOS: [4]
+    - W_FBPOS_BUCKR: [1]
+    - BUCKR: [1]
+
   # NOCO bypass: ring lugs stack on PowerPost (positive) and FB negative bus (negative)
   -
     - POST: [1]
@@ -252,6 +274,11 @@ connections:
     - FBNEG: [5]
     - W_FBNEG_NOCO: [1]
     - NOCO: [2]
+
+  -
+    - FBNEG: [6]
+    - W_FBNEG_BUCKR: [1]
+    - BUCKR: [2]
 
   # Negative (-) path: Battery -> FBNEG; CC negative also lands here
   -
@@ -285,10 +312,10 @@ connections:
     - W_BUCKUC_UC: [1, 2]
     - UC: [1, 2]
 
-  # Router: power from charge controller's built-in USB-A 5V output
+  # Router: power from dedicated BUCKR (downstream of Load Kill, so isolated when Load Kill is OFF)
   -
-    - CC: [3, 4]
-    - W_CC_ROUTER: [1, 2]
+    - BUCKR: [3, 4]
+    - W_BUCKR_ROUTER: [1, 2]
     - ROUTER: [1, 2]
 
   # Router: Ethernet patch from Pi to Router LAN port
