@@ -44,6 +44,41 @@ log = logging.getLogger("renogy-agent")
 
 low_streak = 0
 
+# Rested-LiFePO4 voltage-to-SoC table. The Wanderer's reported
+# `battery_percentage` is calibrated for lead-acid and is unreliable for
+# LiFePO4 (sticks at 100% across most of the discharge curve), and it can't
+# see loads on the fuse block anyway. We estimate SoC from voltage instead
+# and inject it into the JSON as `battery_soc_estimate`.
+_SOC_TABLE = [
+    (13.4, 100),
+    (13.3, 95),
+    (13.2, 90),
+    (13.1, 80),
+    (13.0, 60),
+    (12.9, 50),
+    (12.8, 30),
+    (12.5, 15),
+    (12.0, 5),
+    (11.0, 0),
+]
+
+
+def soc_from_voltage(voltage: float) -> int:
+    """Linear interpolation across the rested-LiFePO4 voltage table.
+
+    Best accuracy at rest; under load the pack sags ~0.05-0.15 V per amp,
+    so this will *underestimate* SoC during heavy draw. That's the safe
+    direction for triggering low-battery actions.
+    """
+    if voltage >= _SOC_TABLE[0][0]:
+        return 100
+    if voltage <= _SOC_TABLE[-1][0]:
+        return 0
+    for (v_hi, p_hi), (v_lo, p_lo) in zip(_SOC_TABLE, _SOC_TABLE[1:]):
+        if v_lo <= voltage <= v_hi:
+            return int(round(p_lo + (p_hi - p_lo) * (voltage - v_lo) / (v_hi - v_lo)))
+    return 0
+
 
 def write_json(data: dict) -> None:
     """Atomically write the latest reading so readers never see partial JSON."""
@@ -75,14 +110,16 @@ def trigger_shutdown(voltage: float) -> None:
 
 def on_data(client, data: dict) -> None:
     global low_streak
-    write_json(data)
 
     voltage = data.get("battery_voltage", 0) or 0
-    pct = data.get("battery_percentage", 0)
+    data["battery_soc_estimate"] = soc_from_voltage(voltage)
+    write_json(data)
+
     log.info(
-        "battery: %.2fV %s%%  load=%s  pv=%.1fV/%.1fA  status=%s",
+        "battery: %.2fV  est=%d%%  (controller=%s%%)  load=%s  pv=%.1fV/%.1fA  status=%s",
         voltage,
-        pct,
+        data["battery_soc_estimate"],
+        data.get("battery_percentage", 0),
         data.get("load_status"),
         data.get("pv_voltage", 0) or 0,
         data.get("pv_current", 0) or 0,

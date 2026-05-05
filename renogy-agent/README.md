@@ -174,6 +174,33 @@ sudo reboot
 
 After reboot, within ~30 s of login: `cat /run/renogy/latest.json` should show fresh data. This proves the whole chain (tmpfiles.d → service auto-start → BLE discovery → JSON write) works from cold.
 
+## Known quirks
+
+### `battery_percentage` is unreliable — use `battery_voltage` (and `battery_soc_estimate`)
+
+The Wanderer's reported `battery_percentage` field is wrong for this build, for two compounding reasons:
+
+1. **The controller can't see the loads.** In our wiring, the Pi / uConsole / router all draw from the fuse block, which taps the **battery terminals upstream of the Wanderer's load output**. The controller's load output isn't used at all. From the Wanderer's perspective, no current is leaving — so the battery "must" still be at 100%.
+2. **The SoC table is calibrated for lead-acid.** LiFePO4 has an extremely flat discharge curve; the Wanderer's lookup just sits at 100% across most of the usable range.
+
+The agent works around this by interpolating SoC from `battery_voltage` against a rested-LiFePO4 voltage table and injecting the result into the JSON as `battery_soc_estimate`:
+
+| Rested voltage | Estimated SoC |
+|---|---|
+| 13.4 V+ | 100% |
+| 13.2 V | 90% |
+| 13.0 V | 60% |
+| 12.9 V | 50% |
+| 12.5 V | 15% |
+| 12.0 V | 5% |
+| 11.0 V | 0% (BMS protect imminent) |
+
+Caveats:
+- Voltage sags ~0.05–0.15 V per amp under load, so `battery_soc_estimate` will **underestimate** SoC while the Pi is busy. That's the safe direction for triggering low-battery actions.
+- The middle of the LiFePO4 curve (~50–80% SoC, ~12.9–13.1 V) is genuinely flat — no instrument reads it accurately from voltage alone. A coulomb-counting shunt (Victron SmartShunt or similar, ~$110) is the real fix; out of scope for the portable kit.
+- **`battery_percentage` is left in the JSON as-is** for parity with upstream, but downstream consumers (e-ink dashboard, etc.) should read `battery_soc_estimate` instead.
+- LVD shutdown logic uses `battery_voltage` directly against `LOW_VOLTAGE = 11.8 V`. SoC estimation is only for display.
+
 ## Tuning
 
 Edit `agent.py` then `sudo systemctl restart renogy-agent`.

@@ -75,21 +75,21 @@ sudo apt install graphviz        # WireViz uses the `dot` binary
 ## Build phases
 
 ### Phase 1 — Compute & content
-- [ ] Pi + Pi OS Lite, NVMe storage, [nomad-slim](https://github.com/ifnull/nomad-slim) installed for Kiwix-serve and content management
+- [x] Pi + Pi OS Lite, NVMe storage, [nomad-slim](https://github.com/ifnull/nomad-slim) installed for Kiwix-serve and content management
 - [ ] GL.iNet Shadow Ext flashed/configured: SSID, WPA2 password, captive portal, Pi static lease
-- [ ] Pi connected to router via short Ethernet patch
-- [ ] Verify offline WiFi content serving and search
+- [x] Pi connected to router via short Ethernet patch
+- [x] Verify offline WiFi content serving and search
 - [ ] Mount in case loosely
 
 ### Phase 2 — Power & telemetry
-- [ ] Full power system: Wanderer 10A, WUPP fuse block, DROK buck for Pi server, system disconnect + load kill switches, LENKRAD M6 distribution post as positive distribution point
+- [x] Full power system: Wanderer 10A, WUPP fuse block, DROK buck for Pi server, system disconnect + load kill switches, LENKRAD M6 distribution post as positive distribution point
 - [ ] Configure Wanderer LCD: change battery type SLD → **LI**; verify 14.4V boost / 13.6V float
-- [ ] Wire DROK output to Waveshare 5V power screw terminal (trim DROK to ~5.1-5.15V no-load before connecting)
+- [x] Wire DROK output to Waveshare 5V power screw terminal (trim DROK to ~5.1-5.15V no-load before connecting)
 - [x] Verify no undervoltage warnings under NVMe + fan + WiFi AP load
 - [ ] Wire CPT C1205003 buck on its own FBPOS slot (2A fuse); USB-A → micro-USB to router
-- [ ] Confirm Load Kill OFF fully de-energizes Pi, uConsole, and router
+- [x] Confirm Load Kill OFF fully de-energizes Pi, uConsole, and router
 - [ ] Solar panel charging tested
-- [ ] BT-1 module + `cyrils/renogy-bt` telemetry working on the Pi
+- [x] BT-1 module + `cyrils/renogy-bt` telemetry working on the Pi
 - [ ] E-ink battery dashboard daemon + LCD1602 live ops strip running
 - [ ] 3D print mounting plate (cutouts for switches, displays, M6 distribution post, router cradle)
 - [ ] Drill 2× ~10mm holes for RP-SMA antenna bulkheads (gasketed)
