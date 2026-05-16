@@ -8,14 +8,14 @@ Component positions, looking down into the open case (top of image = hinge side)
 
 | Position           | Component                       | Notes                                                                 |
 | ------------------ | ------------------------------- | --------------------------------------------------------------------- |
-| Top-left           | Two toggle switches (SYSDISC, etc.) | Flanked left and right by intake vents on the top case wall.       |
-| Left               | Pi enclosure                    | Status light, momentary push button, power input, and Pi intake vents on the left case wall. Pi enclosure fan orientation to be verified before final assembly so it doesn't recirculate against the lid foam. |
-| Left edge of Pi    | Angled USB adapters             | For SDR. Mechanically brace so SDR weight doesn't stress Pi USB ports. |
+| Top-left           | (reserved / open)               | Available for status light, momentary push button, power input, etc.  |
 | Top-center         | Battery (12V)                   | Positive terminal directly above the underside 12V stud.              |
-| Top-right          | Renogy Wanderer SCC             | RS232 port faces toward BT1.                                          |
-| Right-center       | BT1                             | Topside, right of Wanderer. Short RS232 run. Kept away from router below. Cable secured against fan vibration. |
-| Bottom-center      | Fuse block                      | 12V positive bus fed from underside stud via grommet.                 |
-| Bottom-right       | 80mm exhaust fan                | Powered from fuse block on its own low-amp fuse (~1A). Verify exhaust direction (arrow outward) before mounting. Optional later: PWM control via Pi GPIO tied to CPU temp or a buck-mounted DS18B20. |
+| Top-right          | Two toggle switches (SYSDISC, etc.) | Switch shafts protrude through the baseplate, so nothing can sit directly under them. |
+| Left               | Pi enclosure                    | Vented metal enclosure. Verify enclosure fan orientation before final assembly so it doesn't recirculate against the lid foam. |
+| Left edge of Pi    | Angled USB adapters             | For SDR. Mechanically brace so SDR weight doesn't stress Pi USB ports. |
+| Center, below battery (right-aligned to battery) | BT1 | Short RS232 run down to the Wanderer at bottom-right. Out of the wire-routing channel between Pi and fuse block. |
+| Right-center       | Fuse block (WUPP)               | 12V positive bus fed from underside stud via grommet.                 |
+| Bottom-right       | Renogy Wanderer SCC             | RS232 port faces toward BT1.                                          |
 
 ## Underside
 
@@ -23,38 +23,60 @@ Mounted to the underside of the baseplate. Antennas for the router are externall
 
 | Position (under)   | Component                       | Rationale                                                                 |
 | ------------------ | ------------------------------- | ------------------------------------------------------------------------- |
-| Under battery      | 12V distribution stud           | Battery+ drops straight down through a grommet → disconnect → stud. Shortest, most symmetric feed point. |
-| Under fuse block (right) | Buck converter(s)         | Co-located with fuse block; short runs for 12V in and stepped-down rails out. Warmest non-router component, placed near exhaust side. |
-| Under Pi (left)    | Wi-Fi router                    | Short Ethernet to Pi above. Puts router's 2.4GHz radio on the opposite side of the deck from BT1. Antenna pigtails run to the left case wall. |
+| Under battery (top-center) | Blue Sea 2104 PowerPost (POST) | Battery+ drops straight down through a grommet → MAINFUSE → SYSDISC → POST. Shortest, most symmetric feed point. NOCO X-Connect positive ring lug also stacks here. |
+| Under Pi (left)    | GL.iNet router (GL-AR300M16-Ext) | Farthest from BT1 (center-right topside), shortest Ethernet to Pi above, antenna pigtails to the left case wall. 5V power comes in from BUCKR on the right via USB-A→micro-USB. |
+| Under fuse block (right-center) | Three buck converters: BUCKPI (Pi 5V/5A), BUCKUC (uConsole 5V/3A), BUCKR (router 5V/3A, dual USB-A) | Co-located with the WUPP fuse block that feeds them. Splits underside heat (router left, bucks right) instead of concentrating it. |
 
 ### Power topology
 
+Reference: `cyberdeck-wiring.yml`. Key gates:
+
 ```
-Battery+ → grommet → disconnect → 12V stud → ┬→ Buck converter(s)  (right)
-                                              ├→ Router            (left)
-                                              └→ grommet → Fuse block (topside)
+Battery+ → POST → MAINFUSE → SYSDISC ─┬─→ CC (Renogy Wanderer, solar charging)
+                                       └─→ KILL (Load Kill) → FBPOS → BUCKPI → Pi
+                                                                    → BUCKUC → uConsole
+                                                                    → BUCKR  → Router (USB-A) + spare USB-A
+
+NOCO X-Connect (+) ring lug ─→ POST   (upstream of SYSDISC, charger bypass)
+NOCO X-Connect (-) ring lug ─→ FBNEG
 ```
 
-Leave extra clearance around the stud in the printed baseplate — stacked ring lugs (battery feed + 2-3 distribution legs) build up taller than expected.
+- **Lid-closed (SYSDISC on / LOAD off):** Wanderer continues solar charging; all bucks (and therefore Pi, uConsole, router) are off; NOCO can charge regardless of either switch.
+- **PowerPost clearance:** stacked ring lugs at POST = battery feed in + SYSDISC feed out + NOCO bypass. Leave generous vertical clearance in the printed baseplate around this stud; the stack builds up taller than expected.
+- **Underside cable run:** BUCKR's USB-A out → micro-USB to the router crosses from right (under fuse block) to left (under Pi). Plan a tidy cable channel for this on the underside of the baseplate. Ethernet from Pi RJ45 drops straight down to the router below it.
 
 ## Ventilation
 
-Two independent airflow paths.
+**Operating model** (confirmed against `cyberdeck-wiring.yml`):
+- **Lid open:** SYSDISC on, LOAD KILL on. All systems running (Pi, uConsole, router, bucks, fan).
+- **Lid closed:** SYSDISC on, LOAD KILL off. Wanderer continues solar charging; NOCO X-Connect can also charge (taps upstream of SYSDISC). All three bucks are downstream of LOAD KILL, so Pi, uConsole, router, and fan are all off. The Wanderer is the only meaningfully active component — and it's a mild, intermittent heat source during charging.
 
-**Topside (diagonal sweep):**
-- Intake: slots on the top case wall, flanking the toggle switches (left and right).
-- Exhaust: 80mm fan, bottom-right.
-- Sweeps across Pi → battery → Wanderer toward the fan.
+### Lid-open (active operation)
 
-**Underside (heat source plane):**
-- Default approach: cut airflow slots in the baseplate directly above the bucks and above the router so the topside exhaust fan also pulls underside heat up through them.
-- Upgrade if router/bucks run hot: add a small (40mm) underside fan as exhaust on the opposite case wall from a dedicated underside intake — independent loop from the topside.
+- **Intakes:** slots on the left and right case walls, at underside-cavity height — air enters the underside cavity from both sides.
+- **Exhaust:** single fan mounted to the underside of the baseplate, center, between the Pi and Wanderer. Fan pulls cool air through the underside (across router on the left and bucks on the right) and pushes it up through a corresponding cutout in the baseplate into the open lid space.
+- **Baseplate slots above bucks and router** assist the fan by giving heat dedicated paths up through the plate.
+- The open lid provides effectively unlimited exhaust capacity.
 
-Wire pass-through slots alone are not a reliable airflow path between layers — they help, but plan dedicated vent slots.
+### Lid-closed (charging only, loads off)
+
+No forced airflow available (fan is downstream of LOAD), so rely on passive convection:
+- **Cut side vent ports on both case walls** during initial build — low intake on one wall, high exhaust on the opposite wall, sized for natural convection out of the Wanderer's vicinity.
+- These same ports also serve as the lid-closed convection vents for the underside cavity if any always-on heat sources end up there (see buck wiring note below).
+- Pre-cut these ports on the bench — adding them after final assembly is significantly more annoying.
+- Optional: plug them with foam during transport/storage to keep dust out.
+
+
+### Fan control
+
+- Powered from fuse block on its own low-amp fuse (~1A).
+- Verify exhaust direction (arrow upward, toward open lid) before mounting.
+- Optional later: PWM control via Pi GPIO tied to CPU temp or a buck-mounted DS18B20.
+- Note: lid-open fan exhaust vents upward toward the operator. Not a problem, just expected behavior.
 
 ## RF considerations
 
-- **Router under Pi (left)** and **BT1 topside-right (near Wanderer)** keeps the router's 2.4GHz radio diagonally opposite the BT1, minimizing desense.
+- **Router under Pi (left)** and **BT1 topside center-right (below battery)** keeps the router's 2.4GHz radio diagonally opposite the BT1, minimizing desense.
 - Router antennas externalized on the case wall, so the router being under the metallic Pi enclosure and buck/stud hardware doesn't matter for Wi-Fi range.
 - BT1 stays topside in plastic-only surroundings (cardboard test plate → 3D-printed PLA/PETG production plate). No metal sandwiching.
 
@@ -62,8 +84,9 @@ Wire pass-through slots alone are not a reliable airflow path between layers —
 
 - [ ] Confirm BT1 → Wanderer RS232 cable length reaches chosen BT1 position without strain.
 - [ ] Verify Pi enclosure fan direction (intake vs. exhaust) before final assembly.
-- [ ] Verify 80mm fan arrow orientation before mounting.
-- [ ] Decide whether underside cooling = baseplate slots only, or slots + dedicated underside fan.
-- [ ] Plan zip-tie mount points on the printed baseplate for USB / signal cable management (especially the coiled USB near the fan).
-- [ ] Grommet locations: one under battery+ (to stud), one under fuse block (from stud back to topside).
+- [ ] Verify exhaust fan arrow orientation (upward, toward lid) before mounting.
+- [ ] Plan the underside USB-A → micro-USB cable channel from BUCKR (right) to the router (left). Keep it clear of the fan cutout.
+- [ ] Plan zip-tie mount points on the printed baseplate for USB / signal cable management.
+- [ ] Grommet locations: one under battery+ (to stud), one under fuse block (from stud back to topside), plus pass-throughs for the router Ethernet/power and the buck output rails.
+- [ ] Cutout in baseplate for the exhaust fan, plus dedicated vent slots above the bucks and above the router.
 - [ ] Indoor vs. outdoor case use: open vent slots are fine indoors; if going IP-rated outdoors, switch to louvered covers + Gore-Tex pressure vent.
